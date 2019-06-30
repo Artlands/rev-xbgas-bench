@@ -28,11 +28,11 @@ int main()
 	printf("Pre-Reduction - PE:%d R_Val: %d %d %d %d %d %d %d %d %d %d\n", \
             my_pe, r_val[0], r_val[1], r_val[2], r_val[3], r_val[4], r_val[5], r_val[6], r_val[7], r_val[8], r_val[9]);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_int_reduce_sum(r_val, r_val, 5, 2, 0);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("Post-Reduction - PE:%d R_Val: %d %d %d %d %d %d %d %d %d %d\n", \
             my_pe, r_val[0], r_val[1], r_val[2], r_val[3], r_val[4], r_val[5], r_val[6], r_val[7], r_val[8], r_val[9]);

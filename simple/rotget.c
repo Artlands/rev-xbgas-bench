@@ -83,7 +83,7 @@ int main(int argc, char **argv)
 
     nextpe = (me + 1) % npes;
 
-    temp_barrier();
+    xbrtime_barrier();
 
     if(me == 0){
 		printf("=========================\n");
@@ -105,11 +105,11 @@ int main(int argc, char **argv)
 					printf("PE = %d : Shared_var = %d\n", i, i);
     		printf("After:\n");
     }
-    temp_barrier();
+    xbrtime_barrier();
 
 
     printf("PE = %d : Shared_var = %ld\n", me, dest);
-    temp_barrier();
+    xbrtime_barrier();
 
 		if(me == 0)
 				printf("------------------------------------------\n");

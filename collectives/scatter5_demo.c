@@ -45,11 +45,11 @@ int main()
                                                                                 src_array[8], src_array[9], src_array[10], src_array[11],
                                                                                 src_array[12], src_array[13], src_array[14], src_array[15]);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_int_scatter(dest_array, src_array, pe_msg_sz, pe_disp, nelems, 3);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("Pre-Scatter - PE %d dest_array = %d %d %d %d %d\n", my_pe, dest_array[0], dest_array[1], dest_array[2], dest_array[3], dest_array[4]);
 

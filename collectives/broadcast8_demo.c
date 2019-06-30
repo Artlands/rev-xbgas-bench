@@ -23,11 +23,11 @@ int main()
 
 	printf("Pre-Broadcast - PE:%d B_Val: %d\n", my_pe, *b_val);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_int_broadcast(b_val, b_val, 1, 1, 4);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("Post-Broadcast - PE:%d B_Val: %d\n", my_pe, *b_val);
 

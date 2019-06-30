@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
 		printf("PE #            = %d\n", numnodes);
 		printf("------------------------------------------\n");
 		}
-    temp_barrier();
+    xbrtime_barrier();
     printf("myid            = %d, scounts=", myid);
     for (i = 0; i < numnodes; i++) {
         printf("%d ", scounts[i]);
@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
             xbrtime_int_put(&rcounts[myid], &scounts[node_id], 1, 0, node_id);
     }
 
-    temp_barrier();
+    xbrtime_barrier();
 
     printf("myid            = %d, rcounts=", myid);
     for (i = 0; i < numnodes; i++) {

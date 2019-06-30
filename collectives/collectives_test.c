@@ -47,7 +47,7 @@ int main()
 
 //	test_scatter1();
 
-	test_gather2();
+//	test_gather2();
 
 	//test_alltoall3();
 }
@@ -59,19 +59,19 @@ void barrier_test()
 	int b = 1;
 
 	printf("PE %d arriving at barrier %d!\n", my_pe, b);
-	temp_barrier();
+	xbrtime_barrier();
 	printf("PE %d leaving barrier %d!\n", my_pe, b);
 
 	b++;
 
 	printf("PE %d arriving at barrier %d!\n", my_pe, b);
-	temp_barrier();
+	xbrtime_barrier();
 	printf("PE %d leaving barrier %d!\n", my_pe, b);
 
 	b++;
 
 	printf("PE %d arriving at barrier %d!\n", my_pe, b);
-	temp_barrier();
+	xbrtime_barrier();
 	printf("PE %d leaving barrier %d!\n", my_pe, b);
 
 	xbrtime_close();
@@ -91,11 +91,11 @@ void ld_get_test()
 
 	printf("PE %d intial value %Lf\n", my_pe, *x);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_longdouble_put_nb(y,x,1,1,((my_pe+1)%numpes));
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("PE %d final value %Lf\n", my_pe, *y);
 
@@ -114,15 +114,15 @@ void test_broadcast1()
 
 	printf("Pre-Broadcast - PE:%d B_Val: %d\n", my_pe, *b_val);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_int_broadcast(b_val, b_val, 1, 0, 3);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("Post-Broadcast - PE:%d B_Val: %d\n", my_pe, *b_val);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_close();
 }
@@ -146,11 +146,11 @@ void test_broadcast2()
 
 	printf("Pre-Broadcast - PE:%d B_Val: %f %f %f %f %f\n", my_pe, b_val[0], b_val[1], b_val[2], b_val[3], b_val[4]);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_double_broadcast(b_val, b_val, 5, stride, 2);
 
-	temp_barrier();
+	xbrtime_barrier();
 
         printf("Post-Broadcast - PE:%d B_Val: %f %f %f %f %f\n", my_pe, b_val[0], b_val[1], b_val[2], b_val[3], b_val[4]);
 
@@ -176,11 +176,11 @@ void test_broadcast3()
 
 	printf("Pre-Broadcast - PE:%d B_Val: %d %d %d %d %d %d %d %d %d %d\n", my_pe, b_val[0], b_val[1], b_val[2], b_val[3], b_val[4], b_val[5], b_val[6], b_val[7], b_val[8], b_val[9]);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_longlong_broadcast(b_val, b_val, 5, stride, 7);
 
-	temp_barrier();
+	xbrtime_barrier();
 
     printf("Post-Broadcast - PE:%d B_Val: %d %d %d %d %d %d %d %d %d %d\n", my_pe, b_val[0], b_val[1], b_val[2], b_val[3], b_val[4], b_val[5], b_val[6], b_val[7], b_val[8], b_val[9]);
 
@@ -202,11 +202,11 @@ void test_reduce1()
 
 	printf("Pre-Reduce - PE:%d R_Val: %d\n", my_pe, *r_val);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_int_reduce_sum(r_val, r_val, 1, stride, 3);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("Post-Reduce - PE:%d R_Val: %d\n", my_pe, *r_val);
 
@@ -232,11 +232,11 @@ void test_reduce2()
 
 	printf("Pre-Reduce - PE:%d R_Val: %d %d %d %d %d %d %d %d %d %d\n", my_pe, r_val[0], r_val[1], r_val[2], r_val[3], r_val[4], r_val[5], r_val[6], r_val[7], r_val[8], r_val[9]);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_int_reduce_product(r_val, r_val, 5, stride, 0);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("Post-Reduce - PE:%d R_Val: %d %d %d %d %d %d %d %d %d %d\n", my_pe, r_val[0], r_val[1], r_val[2], r_val[3], r_val[4], r_val[5], r_val[6], r_val[7], r_val[8], r_val[9]);
 
@@ -262,11 +262,11 @@ void test_reduce3()
 
 	printf("Pre-Reduce - PE:%d R_Val: %f\n", my_pe, r_val[0]);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_double_reduce_sum(r_val, r_val, nelems, stride, 4);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("Post-Reduce - PE:%d R_Val: %f\n", my_pe, r_val[0]);
 
@@ -292,11 +292,11 @@ void test_reduce4()
 
 	printf("Pre-Reduce - PE:%d R_Val: %f %f %f %f %f %f %f %f %f %f\n", my_pe, r_val[0], r_val[1], r_val[2], r_val[3], r_val[4], r_val[5], r_val[6], r_val[7], r_val[8], r_val[9]);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_double_reduce_product(r_val, r_val, 5, stride, 2);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("Post-Reduce - PE:%d R_Val: %f %f %f %f %f %f %f %f %f %f\n", my_pe, r_val[0], r_val[1], r_val[2], r_val[3], r_val[4], r_val[5], r_val[6], r_val[7], r_val[8], r_val[9]);
 
@@ -322,11 +322,11 @@ void test_reduce5()
 
 	printf("Pre-Reduce - PE:%d R_Val: %d\n", my_pe, r_val[0]);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_short_reduce_xor(r_val, r_val, 1, stride, 5);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("Post-Reduce - PE:%d R_Val: %d\n", my_pe, r_val[0]);
 
@@ -352,11 +352,11 @@ void test_reduce6()
 
 	printf("Pre-Reduce - PE:%d R_Val: %d %d %d %d %d %d %d %d %d %d\n", my_pe, r_val[0], r_val[1], r_val[2], r_val[3], r_val[4], r_val[5], r_val[6], r_val[7], r_val[8], r_val[9]);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_int_reduce_and(r_val, r_val, 5, stride, 5);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("Post-Reduce - PE:%d R_Val: %d %d %d %d %d %d %d %d %d %d\n", my_pe, r_val[0], r_val[1], r_val[2], r_val[3], r_val[4], r_val[5], r_val[6], r_val[7], r_val[8], r_val[9]);
 
@@ -382,11 +382,11 @@ void test_reduce7()
 
 	printf("Pre-Reduce - PE:%d R_Val: %d\n", my_pe, r_val[0]);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_long_reduce_or(r_val, r_val, 1, stride, 0);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("Post-Reduce - PE:%d R_Val: %d\n", my_pe, r_val[0]);
 
@@ -412,11 +412,11 @@ void test_reduce8()
 
 	printf("Pre-Reduce - PE:%d R_Val: %f %f %f\n", my_pe, r_val[0], r_val[1], r_val[2]);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_double_reduce_min(r_val, r_val, 3, stride, 5);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("Post-Reduce - PE:%d R_Val: %f %f %f\n", my_pe, r_val[0], r_val[1], r_val[2]);
 
@@ -442,11 +442,11 @@ void test_reduce9()
 
 	printf("Pre-Reduce - PE:%d R_Val: %d %d %d %d %d %d\n", my_pe, r_val[0], r_val[1], r_val[2], r_val[3], r_val[4], r_val[5]);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_longlong_reduce_max(r_val, r_val, 3, stride, 0);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("Post-Reduce - PE:%d R_Val: %d %d %d %d %d %d\n", my_pe, r_val[0], r_val[1], r_val[2], r_val[3], r_val[4], r_val[5]);
 
@@ -487,11 +487,11 @@ void test_scatter1()
 	printf("PE %d src_array = %d %d %d %d %d %d %d %d\n", my_pe, src_array[0], src_array[1], src_array[2], src_array[3],
 								src_array[4], src_array[5], src_array[6], src_array[7]);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_short_scatter(dest_array, src_array, pe_msg_sz, pe_disp, 8, 0);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("PE %d dest_array = %d %d\n", my_pe, dest_array[0], dest_array[1]);
 
@@ -533,11 +533,11 @@ void test_scatter2()
                                             						src_array[8], src_array[9], src_array[10], src_array[11],
                                            	 					src_array[12], src_array[13], src_array[14], src_array[15]);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_int_scatter(dest_array, src_array, pe_msg_sz, pe_disp, nelems, 4);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("PE %d dest_array = %d %d %d %d %d\n", my_pe, dest_array[0], dest_array[1], dest_array[2], dest_array[3], dest_array[4]);
 
@@ -566,11 +566,11 @@ void test_gather1()
 
 	printf("PE %d src_array = %f\n", my_pe, src_array[0]);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_double_gather(dest_array, src_array, pe_msg_sz, pe_disp, 8, 0);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("PE %d dest_array = %f %f %f %f %f %f %f %f\n", my_pe, dest_array[0], dest_array[1], dest_array[2], dest_array[3],
                                                                     dest_array[4], dest_array[5], dest_array[6], dest_array[7]);
@@ -600,11 +600,11 @@ void test_gather2()
 
     printf("PE %d src_array = %d %d %d %d %d\n", my_pe, src_array[0], src_array[1], src_array[2], src_array[3], src_array[4]);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	xbrtime_int_gather(dest_array, src_array, pe_msg_sz, pe_disp, 15, 3);
 
-	temp_barrier();
+	xbrtime_barrier();
 
     printf("PE %d dest_array = %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n", my_pe, dest_array[0], dest_array[1], dest_array[2], dest_array[3],
                                                 dest_array[4], dest_array[5], dest_array[6], dest_array[7],
@@ -639,11 +639,11 @@ void test_alltoall1()
                             my_pe, src_array[0], src_array[1], src_array[2], src_array[3], src_array[4], src_array[5], src_array[6], src_array[7],
                             my_pe, dest_array[0], dest_array[1], dest_array[2], dest_array[3], dest_array[4], dest_array[5], dest_array[6], dest_array[7]);
 
-    temp_barrier();
+    xbrtime_barrier();
 
 	xbrtime_int_alltoall(dest_array, src_array, src_stride, dest_stride, nelems);
 
-	temp_barrier();
+	xbrtime_barrier();
 
     printf("Post-AlltoAll\nPE:%d src_array: %d %d %d %d %d %d %d %d\nPE %d dest_array: %d %d %d %d %d %d %d %d\n",
                             my_pe, src_array[0], src_array[1], src_array[2], src_array[3], src_array[4], src_array[5], src_array[6], src_array[7],
@@ -678,11 +678,11 @@ void test_alltoall2()
                             my_pe,dest_array[0], dest_array[1], dest_array[2], dest_array[3], dest_array[4], dest_array[5], dest_array[6], dest_array[7],
                             dest_array[8], dest_array[9], dest_array[10], dest_array[11]);
 
-    temp_barrier();
+    xbrtime_barrier();
 
 	xbrtime_double_alltoall(dest_array, src_array, src_stride, dest_stride, nelems);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("Post-AlltoAll\nPE:%d src_array: %f %f %f %f %f %f %f %f %f %f %f %f\n\
                            PE: %d dest_array: %f %f %f %f %f %f %f %f %f %f %f %f\n",
@@ -732,11 +732,11 @@ void test_alltoall3()
 			    dest_array[17], dest_array[18], dest_array[19], dest_array[20], dest_array[21], dest_array[22],dest_array[23], dest_array[24], dest_array[25],
 			    dest_array[26]);
 
-    temp_barrier();
+    xbrtime_barrier();
 
 	xbrtime_short_alltoall(dest_array, src_array, src_stride, dest_stride, nelems);
 
-	temp_barrier();
+	xbrtime_barrier();
 
 	printf("Post-AlltoAll\nPE:%d src_array: %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n\
                 PE: %d dest_array: %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",

@@ -16,22 +16,22 @@ void test_##_typename##_##_op(_type op_val)                                     
         printf("RUNNING ATOMIC %s TEST FOR TYPE %s!\n", #_op, #_type);                                                      \
     }                                                                                                                       \
                                                                                                                             \
-    temp_barrier();                                                                                                         \
+    xbrtime_barrier();                                                                                                         \
                                                                                                                             \
     printf("Before atomic operation\tPE: %d\tSource value: "_format"\tOp value: "_format"\n", my_pe, *source_val, op_val);  \
                                                                                                                             \
-    temp_barrier();                                                                                                         \
+    xbrtime_barrier();                                                                                                         \
                                                                                                                             \
     if(my_pe == 0)                                                                                                          \
     {                                                                                                                       \
         xbrtime_##_typename##_atomic_##_op(source_val, op_val, 1);                                                          \
     }                                                                                                                       \
                                                                                                                             \
-    temp_barrier();                                                                                                         \
+    xbrtime_barrier();                                                                                                         \
                                                                                                                             \
     printf("After atomic operation\tPE: %d\tSource value: "_format"\tOp value: "_format"\n", my_pe, *source_val, op_val);   \
                                                                                                                             \
-    temp_barrier();                                                                                                         \
+    xbrtime_barrier();                                                                                                         \
                                                                                                                             \
     if(my_pe == 0)                                                                                                          \
     {                                                                                                                       \

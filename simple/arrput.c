@@ -87,7 +87,7 @@ int main(int argc, char **argv)
 
     nextpe = (me + 1) % npes;
 
-    temp_barrier();
+    xbrtime_barrier();
 
     if(me == 0){
 		printf("=========================\n");
@@ -107,7 +107,7 @@ int main(int argc, char **argv)
 				printf("------------------------------------------\n");
     }
 
-    temp_barrier();
+    xbrtime_barrier();
     for (i = 0; i < N; i += 1) {
         printf("PE = %d, dest[%d] = %ld\n", me, i, dest[i]);
     }

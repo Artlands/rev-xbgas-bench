@@ -82,7 +82,7 @@ int kmeans(int dim, int n, double* data, int k, uint64_t *cluster_assign, double
 
 	flag 	= (int*)(xbrtime_malloc( sizeof(int) ));
 	*flag =	-k;
-	temp_barrier();
+	xbrtime_barrier();
 	if(myid == 0){
 		/*---init previous centroid-----*/
 		for(j = 0; j < dim*k; j++)
@@ -125,7 +125,7 @@ int kmeans(int dim, int n, double* data, int k, uint64_t *cluster_assign, double
 				buffer2[i]  += cluster_size[i];
 
 		}
-		temp_barrier();
+		xbrtime_barrier();
 
 		if(myid == 0){
 			/*---update previous centroid----*/
@@ -166,7 +166,7 @@ int kmeans(int dim, int n, double* data, int k, uint64_t *cluster_assign, double
 														1);					                              // pe
 
 		}
-		temp_barrier();
+		xbrtime_barrier();
 	}
 
 	if(myid == 0){
@@ -180,7 +180,7 @@ int kmeans(int dim, int n, double* data, int k, uint64_t *cluster_assign, double
 				if(cluster_assign[i] < buffer3[i])
 					cluster_assign[i] = buffer3[i];
 	}
-	temp_barrier();
+	xbrtime_barrier();
 	xbrtime_free( flag );
 	xbrtime_free( center );
 	return 0;
@@ -230,7 +230,7 @@ int main(int argc,char *argv[])
 		cluster_center[i] = data[i];
 	}
 
-	temp_barrier();
+	xbrtime_barrier();
 	if(myid == 0 ){
 		printf("=========================\n");
 		printf(" xBGAS K-means Benchmark\n");
@@ -268,7 +268,7 @@ int main(int argc,char *argv[])
 		}
 
 	}
-	temp_barrier();
+	xbrtime_barrier();
 	xbrtime_free( data );
 	xbrtime_free( cluster_center );
 	xbrtime_free( cluster_size );

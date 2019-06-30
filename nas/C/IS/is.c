@@ -487,7 +487,7 @@ void full_verify()
 /*  Send largest key value to next processor  */
     if( my_rank < comm_size-1 )
     xbrtime_int_put(k, &key_array[total_local_keys-1], 1, 0, my_rank+1);
-    temp_barrier();
+    xbrtime_barrier();
 
 /*  Confirm that neighbor's greatest key value
     is not greater than my least key value       */
@@ -586,11 +586,11 @@ void rank( int iteration )
 
 /*  Get the bucket size totals for the entire problem. These
     will be used to determine the redistribution of keys      */
-    temp_barrier();
+    xbrtime_barrier();
     xbrtime_int_reduce_sum(bucket_size_totals, bucket_size, NUM_BUCKETS+TEST_ARRAY_SIZE, 1, 0);
-    temp_barrier();
+    xbrtime_barrier();
     xbrtime_int_broadcast(bucket_size_totals, bucket_size_totals, NUM_BUCKETS+TEST_ARRAY_SIZE, 1, 0);
-    temp_barrier();
+    xbrtime_barrier();
 
 #ifdef  TIMING_ENABLED
     timer_stop( 3 );
@@ -641,12 +641,12 @@ void rank( int iteration )
 
 /*  This is the redistribution section:  first find out how many keys
     each processor will send to every other processor:                 */
-    temp_barrier();
+    xbrtime_barrier();
     int j1;
     for(j1=0;j1<comm_size;j1++){
         xbrtime_int_put(&recv_count[my_rank], &send_count[j1], 1, 0, j1);
     }
-    temp_barrier();
+    xbrtime_barrier();
 
 /*  Determine the receive array displacements for the buckets */
     recv_displ[0] = 0;
@@ -655,14 +655,14 @@ void rank( int iteration )
 
 
 /*  Now send the keys to respective processors  */
-    temp_barrier();
+    xbrtime_barrier();
     for(j1=0;j1<comm_size;j1++){
 		int k1 = send_displ[j1]; // sender displ index changes each iteration, but local copy of sender
 	 	static int k2;
         xbrtime_int_get(&k2, &recv_displ[my_rank], 1, 0, j1);
         xbrtime_int_put(key_buff2+k2, key_buff1+k1, send_count[j1], 1, j1);
     }
-    temp_barrier();
+    xbrtime_barrier();
 #ifdef  TIMING_ENABLED
     timer_stop( 3 );
     timer_start( 2 );
@@ -908,7 +908,7 @@ int main( argc, argv )
     itemp = (int*) xbrtime_malloc(sizeof(int));
     k = (INT_TYPE*) xbrtime_malloc(sizeof(INT_TYPE));
 
-    temp_barrier();
+    xbrtime_barrier();
 
 /*  Initialize the verification arrays if a valid class */
     for( i=0; i<TEST_ARRAY_SIZE; i++ )
@@ -1023,11 +1023,11 @@ int main( argc, argv )
     *timecounter = timer_read( 0 );
 
 /*  End of timing, obtain maximum time of all processors */
-    temp_barrier();
+    xbrtime_barrier();
     xbrtime_double_reduce_max(maxtime, timecounter, 1, 0, 0);
-    temp_barrier();
+    xbrtime_barrier();
     xbrtime_double_broadcast(maxtime, maxtime, 1, 0, 0);
-    temp_barrier();
+    xbrtime_barrier();
 
 #ifdef  TIMING_ENABLED
     {
@@ -1040,19 +1040,19 @@ int main( argc, argv )
         for( i=1; i<=3; i++ )
         {
             *timecounter = timer_read( i );
-            temp_barrier();
+            xbrtime_barrier();
             xbrtime_double_reduce_min(tmin, timecounter, 1, 0, 0);
-            temp_barrier();
+            xbrtime_barrier();
             xbrtime_double_reduce_sum(tsum, timecounter, 1, 0, 0);
-            temp_barrier();
+            xbrtime_barrier();
             xbrtime_double_reduce_max(tmax, timecounter, 1, 0, 0);
-            temp_barrier();
+            xbrtime_barrier();
             xbrtime_double_broadcast(tmin, tmin, 1, 0, 0);
-            temp_barrier();
+            xbrtime_barrier();
             xbrtime_double_broadcast(tsum, tsum, 1, 0, 0);
-            temp_barrier();
+            xbrtime_barrier();
             xbrtime_double_broadcast(tmax, tmax, 1, 0, 0);
-            temp_barrier();
+            xbrtime_barrier();
 
             if( my_rank == 0 )
                 printf( "timer %d:    %f           %f            %f\n",
@@ -1070,11 +1070,11 @@ int main( argc, argv )
 
 /*  Obtain verification counter sum */
     *itemp = *passed_verification;
-    temp_barrier();
+    xbrtime_barrier();
     xbrtime_int_reduce_sum(passed_verification, itemp, 1, 0, 0);
-    temp_barrier();
+    xbrtime_barrier();
     xbrtime_int_broadcast(passed_verification, passed_verification, 1, 0, 0);
-    temp_barrier();
+    xbrtime_barrier();
 
 /*  The final printout  */
     if( my_rank == 0 )
@@ -1107,7 +1107,7 @@ int main( argc, argv )
     }
 
 
-    temp_barrier();
+    xbrtime_barrier();
 
     /* Free shared memory */
     xbrtime_free(passed_verification);

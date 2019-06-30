@@ -81,7 +81,7 @@ int main()
         target[i] = 666;
     }
 
-    temp_barrier();
+    xbrtime_barrier();
 
     if(me == 0){
 		printf("=========================\n");
@@ -96,7 +96,7 @@ int main()
         xbrtime_short_put(target, source, 5, 2, 1);
     }
 
-    temp_barrier();        /* sync sender and receiver */
+    xbrtime_barrier();        /* sync sender and receiver */
 
 
 
@@ -106,7 +106,7 @@ int main()
 				printf("Time cost       = %f sec\n", time_end - time_start);
 				printf("------------------------------------------\n");
     }
-    temp_barrier();
+    xbrtime_barrier();
 
     if (me == 1) {
         for (i = 0; i < 10; i += 1) {

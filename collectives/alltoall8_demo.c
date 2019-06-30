@@ -28,11 +28,11 @@ int main()
     printf("Pre-AlltoAll - PE:%d my_array: %d %d %d %d %d %d %d %d\n", my_pe, my_array[0], my_array[1], my_array[2],
                                                                     my_array[3], my_array[4], my_array[5], my_array[6], my_array[7]);
 
-    temp_barrier();
+    xbrtime_barrier();
 
     xbrtime_int_alltoall(my_array, my_array, 1, 1, 1);
 
-    temp_barrier();
+    xbrtime_barrier();
 
     printf("Post-AlltoAll - PE:%d my_array: %d %d %d %d %d %d %d %d\n", my_pe, my_array[0], my_array[1], my_array[2],
                                                                     my_array[3], my_array[4], my_array[5], my_array[6], my_array[7]);

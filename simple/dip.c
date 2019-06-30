@@ -86,7 +86,7 @@ int main(void)
     f = (double *) xbrtime_malloc(sizeof(*f));
 
     *f = PI;
-    temp_barrier();
+    xbrtime_barrier();
 
     if(me == 0){
 		printf("=========================\n");
@@ -101,7 +101,7 @@ int main(void)
         xbrtime_double_put(f, &E, 1, 0, 1);
     }
 
-    temp_barrier();
+    xbrtime_barrier();
 
 
 
@@ -110,7 +110,7 @@ int main(void)
                me, *f, (fabs(*f - E) < EPSILON) ? "TEST VERIFIED!" : "TEST FAILED");
     }
 
-    temp_barrier();
+    xbrtime_barrier();
 
     if(me == 0){
 				time_end = mysecond();

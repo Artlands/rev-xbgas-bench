@@ -32,11 +32,11 @@ int main()
 
     printf("Pre-Gather - PE %d src_array = %d %d %d %d %d\n", my_pe, src_array[0], src_array[1], src_array[2], src_array[3], src_array[4]);
 
-    temp_barrier();
+    xbrtime_barrier();
 
     xbrtime_int_gather(dest_array, src_array, pe_msg_sz, pe_disp, nelems, 3);
 
-    temp_barrier();
+    xbrtime_barrier();
 
     printf("Pre-Gather - PE %d dest_array = %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n", my_pe, dest_array[0], dest_array[1], dest_array[2], dest_array[3],
                                                                                 dest_array[4], dest_array[5], dest_array[6], dest_array[7],

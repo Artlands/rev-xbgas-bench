@@ -141,11 +141,11 @@ int main(int argc, char **argv)
   if (! HPCC_Table) *sAbort = 1;
 
 
-  temp_barrier();
+  xbrtime_barrier();
   xbrtime_int_reduce_sum(rAbort, sAbort, 1, 1, 0);
-  temp_barrier();
+  xbrtime_barrier();
   xbrtime_int_broadcast(rAbort, rAbort, 1, 1, 0);
-  temp_barrier();
+  xbrtime_barrier();
 
   if (*rAbort > 0) {
     if (MyProc == 0) fprintf(outFile, "Failed to allocate memory for the main table.\n");
@@ -176,7 +176,7 @@ int main(int argc, char **argv)
   for (i=0; i<LocalTableSize; i++)
     HPCC_Table[i] = MyProc;
 
-  temp_barrier();
+  xbrtime_barrier();
 
   int j,k;
   int logTableLocal,ipartner,iterate,niterate;
@@ -219,7 +219,7 @@ int main(int argc, char **argv)
   int verify=1;
   u64Int remote_val;
 
-  temp_barrier();
+  xbrtime_barrier();
 
   /* Begin timed section */
   RealTime = -RTSEC();
@@ -236,13 +236,13 @@ int main(int argc, char **argv)
 
       xbrtime_longlong_put(&HPCC_Table[*ran & (LocalTableSize-1)], &remote_val, 1, 0, remote_proc);
 
-      temp_barrier();
+      xbrtime_barrier();
 
       if(verify)
         xbrtime_longlong_atomic_add(&updates[thisPeId], 1, remote_proc);
   }
 
-  temp_barrier();
+  xbrtime_barrier();
 
   /* End timed section */
   RealTime += RTSEC();
@@ -264,11 +264,11 @@ int main(int argc, char **argv)
       pe_updates += updates[j];
     printf("PE%d updates:%d\n",MyProc,updates[0]);
 
-    temp_barrier();
+    xbrtime_barrier();
     xbrtime_longlong_reduce_sum(all_updates, updates, NumProcs, 1, 0);
-    temp_barrier();
+    xbrtime_barrier();
     xbrtime_longlong_broadcast(all_updates, all_updates, NumProcs, 1, 0);
-    temp_barrier();
+    xbrtime_barrier();
 
     if(MyProc == 0){
       for (j = 1; j < numNodes; j++)
@@ -279,7 +279,7 @@ int main(int argc, char **argv)
         printf("Verification failed!\n");
     }
   }
-  temp_barrier();
+  xbrtime_barrier();
 
   /* End verification phase */
 
@@ -287,7 +287,7 @@ int main(int argc, char **argv)
   xbrtime_free(count);
   xbrtime_free(updates);
   xbrtime_free(ran);
-  temp_barrier();
+  xbrtime_barrier();
 
   /* Deallocate memory (in reverse order of allocation which should
  *      help fragmentation) */
@@ -297,12 +297,12 @@ int main(int argc, char **argv)
 
   if (0 == MyProc) if (outFile != stderr) fclose( outFile );
 
-  temp_barrier();
+  xbrtime_barrier();
 
   xbrtime_free(sAbort);
   xbrtime_free(rAbort);
 
-  temp_barrier();
+  xbrtime_barrier();
 
   xbrtime_close();
 
