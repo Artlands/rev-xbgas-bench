@@ -100,6 +100,7 @@ int main(int argc, char **argv)
 
   /*Allocate symmetric memory*/
   sAbort = (int *)xbrtime_malloc(sizeof(int));
+  rAbort = (int *)xbrtime_malloc(sizeof(int));
   GUPs = (double *)xbrtime_malloc(sizeof(double));
   temp_GUPs = (double *)xbrtime_malloc(sizeof(double));
   GlbNumErrors = (s64Int *)xbrtime_malloc(sizeof(s64Int));
