@@ -143,9 +143,7 @@ int main(int argc, char **argv)
 
   xbrtime_barrier();
   xbrtime_int_reduce_sum(rAbort, sAbort, 1, 1, 0);
-  xbrtime_barrier();
   xbrtime_int_broadcast(rAbort, rAbort, 1, 1, 0);
-  xbrtime_barrier();
 
   if (*rAbort > 0) {
     if (MyProc == 0) fprintf(outFile, "Failed to allocate memory for the main table.\n");
@@ -266,9 +264,7 @@ int main(int argc, char **argv)
 
     xbrtime_barrier();
     xbrtime_longlong_reduce_sum(all_updates, updates, NumProcs, 1, 0);
-    xbrtime_barrier();
     xbrtime_longlong_broadcast(all_updates, all_updates, NumProcs, 1, 0);
-    xbrtime_barrier();
 
     if(MyProc == 0){
       for (j = 1; j < numNodes; j++)

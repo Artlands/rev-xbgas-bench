@@ -588,9 +588,7 @@ void rank( int iteration )
     will be used to determine the redistribution of keys      */
     xbrtime_barrier();
     xbrtime_int_reduce_sum(bucket_size_totals, bucket_size, NUM_BUCKETS+TEST_ARRAY_SIZE, 1, 0);
-    xbrtime_barrier();
     xbrtime_int_broadcast(bucket_size_totals, bucket_size_totals, NUM_BUCKETS+TEST_ARRAY_SIZE, 1, 0);
-    xbrtime_barrier();
 
 #ifdef  TIMING_ENABLED
     timer_stop( 3 );
@@ -1025,9 +1023,7 @@ int main( argc, argv )
 /*  End of timing, obtain maximum time of all processors */
     xbrtime_barrier();
     xbrtime_double_reduce_max(maxtime, timecounter, 1, 0, 0);
-    xbrtime_barrier();
     xbrtime_double_broadcast(maxtime, maxtime, 1, 0, 0);
-    xbrtime_barrier();
 
 #ifdef  TIMING_ENABLED
     {
@@ -1042,17 +1038,11 @@ int main( argc, argv )
             *timecounter = timer_read( i );
             xbrtime_barrier();
             xbrtime_double_reduce_min(tmin, timecounter, 1, 0, 0);
-            xbrtime_barrier();
             xbrtime_double_reduce_sum(tsum, timecounter, 1, 0, 0);
-            xbrtime_barrier();
             xbrtime_double_reduce_max(tmax, timecounter, 1, 0, 0);
-            xbrtime_barrier();
             xbrtime_double_broadcast(tmin, tmin, 1, 0, 0);
-            xbrtime_barrier();
             xbrtime_double_broadcast(tsum, tsum, 1, 0, 0);
-            xbrtime_barrier();
             xbrtime_double_broadcast(tmax, tmax, 1, 0, 0);
-            xbrtime_barrier();
 
             if( my_rank == 0 )
                 printf( "timer %d:    %f           %f            %f\n",
@@ -1072,9 +1062,7 @@ int main( argc, argv )
     *itemp = *passed_verification;
     xbrtime_barrier();
     xbrtime_int_reduce_sum(passed_verification, itemp, 1, 0, 0);
-    xbrtime_barrier();
     xbrtime_int_broadcast(passed_verification, passed_verification, 1, 0, 0);
-    xbrtime_barrier();
 
 /*  The final printout  */
     if( my_rank == 0 )
