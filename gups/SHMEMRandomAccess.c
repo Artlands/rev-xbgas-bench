@@ -140,8 +140,6 @@ int main(int argc, char **argv)
   HPCC_Table = (u64Int *)xbrtime_malloc( sizeof(u64Int)*LocalTableSize );
   if (! HPCC_Table) *sAbort = 1;
 
-
-  xbrtime_barrier();
   xbrtime_int_reduce_sum(rAbort, sAbort, 1, 1, 0);
   xbrtime_int_broadcast(rAbort, rAbort, 1, 1, 0);
 
@@ -262,7 +260,6 @@ int main(int argc, char **argv)
       pe_updates += updates[j];
     printf("PE%d updates:%d\n",MyProc,updates[0]);
 
-    xbrtime_barrier();
     xbrtime_longlong_reduce_sum(all_updates, updates, NumProcs, 1, 0);
     xbrtime_longlong_broadcast(all_updates, all_updates, NumProcs, 1, 0);
 

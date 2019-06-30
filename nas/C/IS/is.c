@@ -586,7 +586,6 @@ void rank( int iteration )
 
 /*  Get the bucket size totals for the entire problem. These
     will be used to determine the redistribution of keys      */
-    xbrtime_barrier();
     xbrtime_int_reduce_sum(bucket_size_totals, bucket_size, NUM_BUCKETS+TEST_ARRAY_SIZE, 1, 0);
     xbrtime_int_broadcast(bucket_size_totals, bucket_size_totals, NUM_BUCKETS+TEST_ARRAY_SIZE, 1, 0);
 
@@ -1021,7 +1020,6 @@ int main( argc, argv )
     *timecounter = timer_read( 0 );
 
 /*  End of timing, obtain maximum time of all processors */
-    xbrtime_barrier();
     xbrtime_double_reduce_max(maxtime, timecounter, 1, 0, 0);
     xbrtime_double_broadcast(maxtime, maxtime, 1, 0, 0);
 
@@ -1036,7 +1034,6 @@ int main( argc, argv )
         for( i=1; i<=3; i++ )
         {
             *timecounter = timer_read( i );
-            xbrtime_barrier();
             xbrtime_double_reduce_min(tmin, timecounter, 1, 0, 0);
             xbrtime_double_reduce_sum(tsum, timecounter, 1, 0, 0);
             xbrtime_double_reduce_max(tmax, timecounter, 1, 0, 0);
@@ -1060,7 +1057,6 @@ int main( argc, argv )
 
 /*  Obtain verification counter sum */
     *itemp = *passed_verification;
-    xbrtime_barrier();
     xbrtime_int_reduce_sum(passed_verification, itemp, 1, 0, 0);
     xbrtime_int_broadcast(passed_verification, passed_verification, 1, 0, 0);
 
