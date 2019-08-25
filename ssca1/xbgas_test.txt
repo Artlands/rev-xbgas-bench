@@ -1,0 +1,56 @@
+Running with xBGAS, npes = 4
+Disabling OpenSHMEM prefetching
+HPCS SSCA #1 Bioinformatics Sequence Alignment Executable Specification:
+Running...
+Using seed 2613174141
+
+Scalable Data Generator - genScalData() beginning execution...
+Inserting sequence ACDEFG*IDENTICAL*HIKLMN in location 167
+Inserting sequence ACDEFG*MISQRMATCHES*HIKLMN in location 1272
+Inserting sequence ACDEFG*STARTGAPMIDSTEND*HIKLMN in location 2057
+Inserting sequence MNLKIH*IDENTICAL*GFEDCA in location 1621
+Inserting sequence MNLKIH*MISRQMATCHES*GFEDCA in location 2028
+Inserting sequence MNLKIH*STARTMIDSTGAPEND*GFEDCA in location 1631
+
+	Elapsed time: 0 hour(s), 0 minute(s), 0 second(s), 0 milliseconds,  154 micro second(s).
+
+   Length of main sequence in codons: 2124
+  Length of match sequence in codons: 2124
+  Weight for exactly matching codons: 5
+           Weight for similar codons: 4
+        Weight for dissimilar codons: -3
+              Penalty to start a gap: 5
+     Penalty for each codon in a gap: 2
+
+Begining Kernel 1 execution.
+
+	Elapsed time: 0 hour(s), 0 minute(s), 22 second(s), 364 milliseconds,  651 micro second(s).
+
+Begining Kernel 2 execution.
+
+	Elapsed time: 0 hour(s), 0 minute(s), 0 second(s), 2 milliseconds,  421 micro second(s).
+
+Found 5 acceptable alignments with scores from 54 to 21.
+
+Starting   Amino     Codon           Ending
+position   acids     bases           position
+
+verifyAlignment 0, succeeded; score 54:
+   1278  *MISQRMATCHES*  tgaatgataagccagaggatggcgacgtgccacgagagctga     1291
+   2034  *MISRQMATCHES*  tgaatgataagcaggcagatggcgacgtgccacgagagctga     2047
+
+verifyAlignment 1, succeeded; score 53:
+   2063  *STARTGAPMIDST---END*  tgaagcacggcgaggacgggggcgccgatgatagacagcacg---------gagaacgactga     2080
+   1637  *START---MIDSTGAPEND*  tgaagcacggcgaggacg---------atgatagacagcacgggggcgccggagaacgactga     1654
+
+verifyAlignment 2, succeeded; score 23:
+     40  LLALSAVHP  ttactggcgctttccgcggtgcatcct       48
+    354  LLVLSLVHP  ctattggtcttgtcgctcgttcatccg      362
+
+verifyAlignment 3, succeeded; score 22:
+    654  LTLVR  ctaacacttgttcgg      658
+   1916  LTLVR  ttaacgcttgttagg     1920
+
+verifyAlignment 4, succeeded; score 21:
+    284  *RR-RSSPS  tagcggcgg---cgatcctcaccctct      291
+    239  *RRERSLPS  tagcggagagaacggtccctccctagt      247
