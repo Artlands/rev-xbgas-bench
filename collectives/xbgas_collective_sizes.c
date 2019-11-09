@@ -338,7 +338,7 @@ void large_gather_all()
 
     (*((long long *)(FLAG))) = 1;
 
-    xbrtime_int_gather_all_ring(message, message, pe_msg_sz, pe_disp, nelems, 0);
+    xbrtime_int_gather_all_ring(message, message, pe_msg_sz, pe_disp, nelems);
 
     (*((long long *)(FLAG))) = 0;
 
