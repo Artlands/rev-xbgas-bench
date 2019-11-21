@@ -100,13 +100,15 @@ void xbrtime_atomic_compare_swap_test()
 #include <shmem.h>
 #include "test.h"
 
+// SHMEM tests use long long type because OSHMEM (OpenMPI OpenSHMEM) doesn't like the int64 typename in atomic calls
+
 void shmem_atomic_add_test()
 {
     shmem_init();
     perf_init();
     int my_pe = shmem_my_pe();
     int numpes = shmem_n_pes();
-    int64_t* value = (int64_t*) shmem_malloc(sizeof(int64_t));
+    long long* value = (long long*) shmem_malloc(sizeof(long long));
     *value = my_pe;
 
     shmem_barrier_all();
@@ -114,7 +116,7 @@ void shmem_atomic_add_test()
     if(my_pe == 0)
     {
         test_start();
-        shmem_int64_atomic_add(value, 1000000000, 1);
+        shmem_longlong_atomic_add(value, 1000000000, 1);
         test_end();
     }
 
@@ -130,7 +132,7 @@ void shmem_atomic_inc_test()
     perf_init();
     int my_pe = shmem_my_pe();
     int numpes = shmem_n_pes();
-    int64_t* value = (int64_t*) shmem_malloc(sizeof(int64_t));
+    long long* value = (long long*) shmem_malloc(sizeof(long long));
     *value = my_pe;
 
     shmem_barrier_all();
@@ -138,7 +140,7 @@ void shmem_atomic_inc_test()
     if(my_pe == 0)
     {
         test_start();
-        shmem_int64_atomic_inc(value, 1);
+        shmem_longlong_atomic_inc(value, 1);
         test_end();
     }
 
@@ -154,7 +156,7 @@ void shmem_atomic_compare_swap_test()
     perf_init();
     int my_pe = shmem_my_pe();
     int numpes = shmem_n_pes();
-    int64_t* value = (int64_t*) shmem_malloc(sizeof(int64_t));
+    long long* value = (long long*) shmem_malloc(sizeof(long long));
     *value = my_pe;
 
     shmem_barrier_all();
@@ -162,7 +164,7 @@ void shmem_atomic_compare_swap_test()
     if(my_pe == 0)
     {
         test_start();
-        shmem_int64_atomic_compare_swap(value, 1, *value, 1);
+        shmem_longlong_atomic_compare_swap(value, 1, *value, 1);
         test_end();
     }
 
@@ -182,10 +184,10 @@ void shmem_atomic_compare_swap_test()
 
 void mpi_atomic_add_test()
 {
-    MPI_Init(&argc, &argv);
+    MPI_Init(NULL, NULL);
     perf_init();
     int my_pe, numpes;
-    MPI_win window;
+    MPI_Win window;
     MPI_Comm_rank(MPI_COMM_WORLD, &my_pe);
     MPI_Comm_size(MPI_COMM_WORLD, &numpes);
     int64_t result, value;
@@ -205,12 +207,12 @@ void mpi_atomic_add_test()
 
     if(my_pe == 0)
     {
-        MPI_Win_lock(MPI_LOCK_EXCLUSIVE, 1, 0, &window);
+        MPI_Win_lock_all(0, window);
         test_start();
-        MPI_Fetch_and_op(&value, &result, MPI_INT64_T, 1, 0, MPI_SUM, &window);
+        MPI_Fetch_and_op(&value, &result, MPI_INT64_T, 1, 0, MPI_SUM, window);
         test_end();
-        MPI_Win_unlock(1, &window);
-        MPI_Win_flush(1, &window);
+        MPI_Win_flush_all(window);
+        MPI_Win_unlock_all(window);
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
@@ -221,10 +223,10 @@ void mpi_atomic_add_test()
 
 void mpi_atomic_inc_test()
 {
-    MPI_Init(&argc, &argv);
+    MPI_Init(NULL, NULL);
     perf_init();
     int my_pe, numpes;
-    MPI_win window;
+    MPI_Win window;
     MPI_Comm_rank(MPI_COMM_WORLD, &my_pe);
     MPI_Comm_size(MPI_COMM_WORLD, &numpes);
     int64_t result, value;
@@ -236,12 +238,12 @@ void mpi_atomic_inc_test()
 
     if(my_pe == 0)
     {
-        MPI_Win_lock(MPI_LOCK_EXCLUSIVE, 1, 0, &window);
+        MPI_Win_lock_all(0, window);
         test_start();
-        MPI_Fetch_and_op(&value, &result, MPI_INT64_T, 1, 0, MPI_SUM, &window);
+        MPI_Fetch_and_op(&value, &result, MPI_INT64_T, 1, 0, MPI_SUM, window);
         test_end();
-        MPI_Win_unlock(1, &window);
-        MPI_Win_flush(1, &window);
+        MPI_Win_flush_all(window);
+        MPI_Win_unlock_all(window);
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
@@ -252,10 +254,10 @@ void mpi_atomic_inc_test()
 
 void mpi_atomic_compare_swap_test()
 {
-    MPI_Init(&argc, &argv);
+    MPI_Init(NULL, NULL);
     perf_init();
     int my_pe, numpes;
-    MPI_win window;
+    MPI_Win window;
     MPI_Comm_rank(MPI_COMM_WORLD, &my_pe);
     MPI_Comm_size(MPI_COMM_WORLD, &numpes);
     int64_t result, value, compare;
@@ -268,12 +270,12 @@ void mpi_atomic_compare_swap_test()
 
     if(my_pe == 0)
     {
-        MPI_Win_lock(MPI_LOCK_EXCLUSIVE, 1, 0, &window);
+        MPI_Win_lock_all(0, window);
         test_start();
-        MPI_Compare_and_swap(&value, &compare, &result, MPI_INT64_T, 1, 0, &window);
+        MPI_Compare_and_swap(&value, &compare, &result, MPI_INT64_T, 1, 0, window);
         test_end();
-        MPI_Win_unlock(1, &window);
-        MPI_Win_flush(1, &window);
+        MPI_Win_flush_all(window);
+        MPI_Win_unlock_all(window);
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
