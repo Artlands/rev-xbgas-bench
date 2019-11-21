@@ -26,16 +26,18 @@ void xbrtime_atomic_add_test()
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
     int64_t* value = (int64_t*) xbrtime_malloc(sizeof(int64_t));
-    *value = my_pe();
+    *value = my_pe;
 
     xbrtime_barrier();
 
+    (*((unsigned long long *)(FLAG))) = 1;
+
     if(my_pe == 0)
     {
-        (*((unsigned long long *)(FLAG))) = 1;
         xbrtime_int64_atomic_add(value, 1000000000, 1);
-        (*((unsigned long long *)(FLAG))) = 0;
     }
+
+    (*((unsigned long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
     xbrtime_free(value);
@@ -48,16 +50,18 @@ void xbrtime_atomic_inc_test()
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
     int64_t* value = (int64_t*) xbrtime_malloc(sizeof(int64_t));
-    *value = my_pe();
+    *value = my_pe;
 
     xbrtime_barrier();
 
+    (*((unsigned long long *)(FLAG))) = 1;
+
     if(my_pe == 0)
     {
-        (*((unsigned long long *)(FLAG))) = 1;
         xbrtime_int64_atomic_add(value, 1, 1);
-        (*((unsigned long long *)(FLAG))) = 0;
     }
+
+    (*((unsigned long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
     xbrtime_free(value);
@@ -70,16 +74,18 @@ void xbrtime_atomic_compare_swap_test()
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
     int64_t* value = (int64_t*) xbrtime_malloc(sizeof(int64_t));
-    *value = my_pe();
+    *value = my_pe;
 
     xbrtime_barrier();
 
+    (*((unsigned long long *)(FLAG))) = 1;
+
     if(my_pe == 0)
     {
-        (*((unsigned long long *)(FLAG))) = 1;
         xbrtime_int64_atomic_compare_swap(value, 1, 1);
-        (*((unsigned long long *)(FLAG))) = 0;
     }
+
+    (*((unsigned long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
     xbrtime_free(value);
@@ -101,7 +107,7 @@ void shmem_atomic_add_test()
     int my_pe = shmem_my_pe();
     int numpes = shmem_n_pes();
     int64_t* value = (int64_t*) shmem_malloc(sizeof(int64_t));
-    *value = my_pe();
+    *value = my_pe;
 
     shmem_barrier_all();
 
@@ -125,7 +131,7 @@ void shmem_atomic_inc_test()
     int my_pe = shmem_my_pe();
     int numpes = shmem_n_pes();
     int64_t* value = (int64_t*) shmem_malloc(sizeof(int64_t));
-    *value = my_pe();
+    *value = my_pe;
 
     shmem_barrier_all();
 
@@ -149,7 +155,7 @@ void shmem_atomic_compare_swap_test()
     int my_pe = shmem_my_pe();
     int numpes = shmem_n_pes();
     int64_t* value = (int64_t*) shmem_malloc(sizeof(int64_t));
-    *value = my_pe();
+    *value = my_pe;
 
     shmem_barrier_all();
 

@@ -51,11 +51,11 @@ void large_broadcast()
 
     xbrtime_barrier();
 
-    (*((long long *)(FLAG))) = 1;
+    (*((unsigned long long *)(FLAG))) = 1;
 
     xbrtime_int_broadcast_van_de_geijn(message, message, nelems, 1, 0);
 
-    (*((long long *)(FLAG))) = 0;
+    (*((unsigned long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
 
@@ -79,11 +79,11 @@ void small_reduce()
 
     xbrtime_barrier();
 
-    (*((long long *)(FLAG))) = 1;
+    (*((unsigned long long *)(FLAG))) = 1;
 
     xbrtime_int_reduce_sum_tree(message, message, nelems, 1, 0);
 
-    (*((long long *)(FLAG))) = 0;
+    (*((unsigned long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
 
@@ -107,11 +107,11 @@ void large_reduce()
 
     xbrtime_barrier();
 
-    (*((long long *)(FLAG))) = 1;
+    (*((unsigned long long *)(FLAG))) = 1;
 
     xbrtime_int_reduce_sum_rabenseifner(message, message, nelems, 1, 0);
 
-    (*((long long *)(FLAG))) = 0;
+    (*((unsigned long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
 
@@ -138,11 +138,11 @@ void small_reduce_all()
 
     xbrtime_barrier();
 
-    (*((long long *)(FLAG))) = 1;
+    (*((unsigned long long *)(FLAG))) = 1;
 
     xbrtime_int_reduce_all_sum_recursive_doubling(message, message, nelems, 1);
 
-    (*((long long *)(FLAG))) = 0;
+    (*((unsigned long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
 
@@ -166,11 +166,11 @@ void large_reduce_all()
 
     xbrtime_barrier();
 
-    (*((long long *)(FLAG))) = 1;
+    (*((unsigned long long *)(FLAG))) = 1;
 
     xbrtime_int_reduce_all_sum_rabenseifner(message, message, nelems, 1);
 
-    (*((long long *)(FLAG))) = 0;
+    (*((unsigned long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
 
@@ -200,11 +200,11 @@ void small_scatter()
 
     xbrtime_barrier();
 
-    (*((long long *)(FLAG))) = 1;
+    (*((unsigned long long *)(FLAG))) = 1;
 
     xbrtime_int_scatter_tree(message, message, pe_msg_sz, pe_disp, nelems, 0);
 
-    (*((long long *)(FLAG))) = 0;
+    (*((unsigned long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
 
@@ -234,11 +234,11 @@ void large_scatter()
 
     xbrtime_barrier();
 
-    (*((long long *)(FLAG))) = 1;
+    (*((unsigned long long *)(FLAG))) = 1;
 
     xbrtime_int_scatter_tree(message, message, pe_msg_sz, pe_disp, nelems, 0);
 
-    (*((long long *)(FLAG))) = 0;
+    (*((unsigned long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
 
@@ -265,11 +265,11 @@ void small_gather()
 
     xbrtime_barrier();
 
-    (*((long long *)(FLAG))) = 1;
+    (*((unsigned long long *)(FLAG))) = 1;
 
     xbrtime_int_gather_tree(message, message, pe_msg_sz, pe_disp, nelems, 0);
 
-    (*((long long *)(FLAG))) = 0;
+    (*((unsigned long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
 
@@ -296,11 +296,11 @@ void large_gather()
 
     xbrtime_barrier();
 
-    (*((long long *)(FLAG))) = 1;
+    (*((unsigned long long *)(FLAG))) = 1;
 
     xbrtime_int_gather_tree(message, message, pe_msg_sz, pe_disp, nelems, 0);
 
-    (*((long long *)(FLAG))) = 0;
+    (*((unsigned long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
 
@@ -327,11 +327,11 @@ void small_gather_all()
 
     xbrtime_barrier();
 
-    (*((long long *)(FLAG))) = 1;
+    (*((unsigned long long *)(FLAG))) = 1;
 
     xbrtime_int_gather_all_bruck_concat(message, message, pe_msg_sz, pe_disp, nelems);
 
-    (*((long long *)(FLAG))) = 0;
+    (*((unsigned long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
 
@@ -358,11 +358,11 @@ void large_gather_all()
 
     xbrtime_barrier();
 
-    (*((long long *)(FLAG))) = 1;
+    (*((unsigned long long *)(FLAG))) = 1;
 
     xbrtime_int_gather_all_ring(message, message, pe_msg_sz, pe_disp, nelems);
 
-    (*((long long *)(FLAG))) = 0;
+    (*((unsigned long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
 
