@@ -20,11 +20,11 @@ void small_broadcast()
 
     xbrtime_barrier();
 
-    (*((long long *)(FLAG))) = 1;
+    (*((unsigned long long *)(FLAG))) = 1;
 
     xbrtime_int_broadcast_tree(message, message, nelems, 1, 0);
 
-    (*((long long *)(FLAG))) = 0;
+    (*((unsigned long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
 
@@ -36,7 +36,7 @@ void large_broadcast()
     xbrtime_init();
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
-    int nelems = 25600;
+    int nelems = 2600;
     int *message = (int*) xbrtime_malloc(sizeof(int) * nelems);
 
     if(my_pe == 0)
@@ -91,7 +91,7 @@ void large_reduce()
     xbrtime_init();
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
-    int nelems = 25600;
+    int nelems = 2560;
     int *message = (int*) xbrtime_malloc(sizeof(int) * nelems);
 
     for(int i = 0; i < nelems; i++)
@@ -146,7 +146,7 @@ void large_reduce_all()
     xbrtime_init();
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
-    int nelems = 25600;
+    int nelems = 2560;
     int *message = (int*) xbrtime_malloc(sizeof(int) * nelems);
 
     for(int i = 0; i < nelems; i++)
@@ -204,7 +204,7 @@ void large_scatter()
     xbrtime_init();
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
-    int nelems = 25600;
+    int nelems = 2560;
     int *message = (int*) xbrtime_malloc(sizeof(int) * nelems);
 
     if(my_pe == 0)
@@ -215,8 +215,8 @@ void large_scatter()
         }
     }
 
-    int pe_msg_sz[8] = {3200, 3200, 3200, 3200, 3200, 3200, 3200, 3200};
-    int pe_disp[8] = {0, 3200, 6400, 9600, 12800, 16000, 19200, 22400};
+    int pe_msg_sz[8] = {320, 320, 320, 320, 320, 320, 320, 320};
+    int pe_disp[8] = {0, 320, 640, 960, 1280, 1600, 1920, 2240};
 
     xbrtime_barrier();
 
@@ -265,7 +265,7 @@ void large_gather()
     xbrtime_init();
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
-    int nelems = 25600;
+    int nelems = 2560;
     int *message = (int*) xbrtime_malloc(sizeof(int) * nelems);
 
     for(int i = 0; i < nelems; i++)
@@ -273,8 +273,8 @@ void large_gather()
         message[i] = my_pe;
     }
 
-    int pe_msg_sz[8] = {3200, 3200, 3200, 3200, 3200, 3200, 3200, 3200};
-    int pe_disp[8] = {0, 3200, 6400, 9600, 12800, 16000, 19200, 22400};
+    int pe_msg_sz[8] = {320, 320, 320, 320, 320, 320, 320, 320};
+    int pe_disp[8] = {0, 320, 640, 960, 1280, 1600, 1920, 2240};
 
     xbrtime_barrier();
 
@@ -323,7 +323,7 @@ void large_gather_all()
     xbrtime_init();
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
-    int nelems = 25600;
+    int nelems = 2560;
     int *message = (int*) xbrtime_malloc(sizeof(int) * nelems);
 
     for(int i = 0; i < nelems; i++)
@@ -331,8 +331,8 @@ void large_gather_all()
         message[i] = my_pe;
     }
 
-    int pe_msg_sz[8] = {3200, 3200, 3200, 3200, 3200, 3200, 3200, 3200};
-    int pe_disp[8] = {0, 3200, 6400, 9600, 12800, 16000, 19200, 22400};
+    int pe_msg_sz[8] = {320, 320, 320, 320, 320, 320, 320, 320};
+    int pe_disp[8] = {0, 320, 640, 960, 1280, 1600, 1920, 2240};
 
     xbrtime_barrier();
 
@@ -349,5 +349,5 @@ void large_gather_all()
 
 void main()
 {
-
+	small_broadcast();
 }
