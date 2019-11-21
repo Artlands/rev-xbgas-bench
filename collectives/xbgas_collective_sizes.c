@@ -28,6 +28,8 @@ void small_broadcast()
 
     xbrtime_barrier();
 
+    xbrtime_free(message);
+
     xbrtime_close();
 }
 
@@ -57,6 +59,8 @@ void large_broadcast()
 
     xbrtime_barrier();
 
+    xbrtime_free(message);
+
     xbrtime_close();
 }
 
@@ -83,6 +87,8 @@ void small_reduce()
 
     xbrtime_barrier();
 
+    xbrtime_free(message);
+
     xbrtime_close();
 }
 
@@ -108,6 +114,8 @@ void large_reduce()
     (*((long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
+
+    xbrtime_free(message);
 
     xbrtime_close();
 }
@@ -138,6 +146,8 @@ void small_reduce_all()
 
     xbrtime_barrier();
 
+    xbrtime_free(message);
+
     xbrtime_close();
 }
 
@@ -163,6 +173,8 @@ void large_reduce_all()
     (*((long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
+
+    xbrtime_free(message);
 
     xbrtime_close();
 }
@@ -196,6 +208,8 @@ void small_scatter()
 
     xbrtime_barrier();
 
+    xbrtime_free(message);
+
     xbrtime_close();
 }
 
@@ -228,6 +242,8 @@ void large_scatter()
 
     xbrtime_barrier();
 
+    xbrtime_free(message);
+
     xbrtime_close();
 }
 
@@ -256,6 +272,8 @@ void small_gather()
     (*((long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
+
+    xbrtime_free(message);
 
     xbrtime_close();
 }
@@ -286,6 +304,8 @@ void large_gather()
 
     xbrtime_barrier();
 
+    xbrtime_free(message);
+
     xbrtime_close();
 }
 
@@ -314,6 +334,8 @@ void small_gather_all()
     (*((long long *)(FLAG))) = 0;
 
     xbrtime_barrier();
+
+    xbrtime_free(message);
 
     xbrtime_close();
 }
@@ -344,10 +366,23 @@ void large_gather_all()
 
     xbrtime_barrier();
 
+    xbrtime_free(message);
+
     xbrtime_close();
 }
 
 void main()
 {
-	small_broadcast();
+	//small_broadcast();
+    //large_broadcast();
+    //small_reduce();
+    //large_reduce();
+    //small_reduce_all();
+    //large_reduce_all();
+    //small_scatter();
+    //large_scatter();
+    //small_gather();
+    //larger_gather();
+    //small_gather_all();
+    //large_gather_all();
 }
