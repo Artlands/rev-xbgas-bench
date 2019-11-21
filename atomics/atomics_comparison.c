@@ -169,7 +169,7 @@ void xbrtime_atomic_min_test()
     xbrtime_init();
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
-    int64_t* value = (int64_t*) xbrtime_malloc(sizeof(int64_t));
+    uint64_t* value = (uint64_t*) xbrtime_malloc(sizeof(uint64_t));
     *value = my_pe;
 
     xbrtime_barrier();
@@ -178,7 +178,7 @@ void xbrtime_atomic_min_test()
 
     if(my_pe == 0)
     {
-        xbrtime_int64_atomic_min(value, *value, 1);
+        xbrtime_uint64_atomic_min(value, *value, 1);
     }
 
     (*((unsigned long long *)(FLAG))) = 0;
@@ -193,7 +193,7 @@ void xbrtime_atomic_max_test()
     xbrtime_init();
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
-    int64_t* value = (int64_t*) xbrtime_malloc(sizeof(int64_t));
+    uint64_t* value = (uint64_t*) xbrtime_malloc(sizeof(uint64_t));
     *value = my_pe;
 
     xbrtime_barrier();
@@ -202,7 +202,7 @@ void xbrtime_atomic_max_test()
 
     if(my_pe == 0)
     {
-        xbrtime_int64_atomic_max(value, *value, 1);
+        xbrtime_uint64_atomic_max(value, *value, 1);
     }
 
     (*((unsigned long long *)(FLAG))) = 0;
