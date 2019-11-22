@@ -92,6 +92,126 @@ void xbrtime_atomic_compare_swap_test()
     xbrtime_close();
 }
 
+void xbrtime_atomic_land_test()
+{
+    xbrtime_init();
+    int my_pe = xbrtime_mype();
+    int numpes = xbrtime_num_pes();
+    int64_t* value = (int64_t*) xbrtime_malloc(sizeof(int64_t));
+    *value = my_pe;
+
+    xbrtime_barrier();
+
+    (*((unsigned long long *)(FLAG))) = 1;
+
+    if(my_pe == 0)
+    {
+        xbrtime_int64_atomic_land(value, *value, 1);
+    }
+
+    (*((unsigned long long *)(FLAG))) = 0;
+
+    xbrtime_barrier();
+    xbrtime_free(value);
+    xbrtime_close();
+}
+
+void xbrtime_atomic_lor_test()
+{
+    xbrtime_init();
+    int my_pe = xbrtime_mype();
+    int numpes = xbrtime_num_pes();
+    int64_t* value = (int64_t*) xbrtime_malloc(sizeof(int64_t));
+    *value = my_pe;
+
+    xbrtime_barrier();
+
+    (*((unsigned long long *)(FLAG))) = 1;
+
+    if(my_pe == 0)
+    {
+        xbrtime_int64_atomic_lor(value, *value, 1);
+    }
+
+    (*((unsigned long long *)(FLAG))) = 0;
+
+    xbrtime_barrier();
+    xbrtime_free(value);
+    xbrtime_close();
+}
+
+void xbrtime_atomic_lxor_test()
+{
+    xbrtime_init();
+    int my_pe = xbrtime_mype();
+    int numpes = xbrtime_num_pes();
+    int64_t* value = (int64_t*) xbrtime_malloc(sizeof(int64_t));
+    *value = my_pe;
+
+    xbrtime_barrier();
+
+    (*((unsigned long long *)(FLAG))) = 1;
+
+    if(my_pe == 0)
+    {
+        xbrtime_int64_atomic_lxor(value, *value, 1);
+    }
+
+    (*((unsigned long long *)(FLAG))) = 0;
+
+    xbrtime_barrier();
+    xbrtime_free(value);
+    xbrtime_close();
+}
+
+void xbrtime_atomic_min_test()
+{
+    xbrtime_init();
+    int my_pe = xbrtime_mype();
+    int numpes = xbrtime_num_pes();
+    int64_t* value = (int64_t*) xbrtime_malloc(sizeof(int64_t));
+    *value = my_pe;
+
+    xbrtime_barrier();
+
+    (*((unsigned long long *)(FLAG))) = 1;
+
+    if(my_pe == 0)
+    {
+        xbrtime_int64_atomic_min(value, *value, 1);
+    }
+
+    (*((unsigned long long *)(FLAG))) = 0;
+
+    xbrtime_barrier();
+    xbrtime_free(value);
+    xbrtime_close();
+}
+
+void xbrtime_atomic_max_test()
+{
+    xbrtime_init();
+    int my_pe = xbrtime_mype();
+    int numpes = xbrtime_num_pes();
+    int64_t* value = (int64_t*) xbrtime_malloc(sizeof(int64_t));
+    *value = my_pe;
+
+    xbrtime_barrier();
+
+    (*((unsigned long long *)(FLAG))) = 1;
+
+    if(my_pe == 0)
+    {
+        xbrtime_int64_atomic_max(value, *value, 1);
+    }
+
+    (*((unsigned long long *)(FLAG))) = 0;
+
+    xbrtime_barrier();
+    xbrtime_free(value);
+    xbrtime_close();
+}
+
 #undef TEST_XBGAS
 #endif
 
@@ -284,6 +404,161 @@ void mpi_atomic_compare_swap_test()
     MPI_Finalize();
 }
 
+void mpi_atomic_land_test()
+{
+    MPI_Init(NULL, NULL);
+    perf_init();
+    int my_pe, numpes;
+    MPI_Win window;
+    MPI_Comm_rank(MPI_COMM_WORLD, &my_pe);
+    MPI_Comm_size(MPI_COMM_WORLD, &numpes);
+    int64_t result, value;
+    value = my_pe;
+
+    MPI_Win_create(&value, sizeof(int64_t), sizeof(int64_t), MPI_INFO_NULL, MPI_COMM_WORLD, &window);
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    if(my_pe == 0)
+    {
+        MPI_Win_lock_all(0, window);
+        test_start();
+        MPI_Fetch_and_op(&value, &result, MPI_INT64_T, 1, 0, MPI_LAND, window);
+        test_end();
+        MPI_Win_flush_all(window);
+        MPI_Win_unlock_all(window);
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Win_free(&window);
+    perf_end();
+    MPI_Finalize();
+}
+
+void mpi_atomic_lor_test()
+{
+    MPI_Init(NULL, NULL);
+    perf_init();
+    int my_pe, numpes;
+    MPI_Win window;
+    MPI_Comm_rank(MPI_COMM_WORLD, &my_pe);
+    MPI_Comm_size(MPI_COMM_WORLD, &numpes);
+    int64_t result, value;
+    value = my_pe;
+
+    MPI_Win_create(&value, sizeof(int64_t), sizeof(int64_t), MPI_INFO_NULL, MPI_COMM_WORLD, &window);
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    if(my_pe == 0)
+    {
+        MPI_Win_lock_all(0, window);
+        test_start();
+        MPI_Fetch_and_op(&value, &result, MPI_INT64_T, 1, 0, MPI_LOR, window);
+        test_end();
+        MPI_Win_flush_all(window);
+        MPI_Win_unlock_all(window);
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Win_free(&window);
+    perf_end();
+    MPI_Finalize();
+}
+
+void mpi_atomic_lxor_test()
+{
+    MPI_Init(NULL, NULL);
+    perf_init();
+    int my_pe, numpes;
+    MPI_Win window;
+    MPI_Comm_rank(MPI_COMM_WORLD, &my_pe);
+    MPI_Comm_size(MPI_COMM_WORLD, &numpes);
+    int64_t result, value;
+    value = my_pe;
+
+    MPI_Win_create(&value, sizeof(int64_t), sizeof(int64_t), MPI_INFO_NULL, MPI_COMM_WORLD, &window);
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    if(my_pe == 0)
+    {
+        MPI_Win_lock_all(0, window);
+        test_start();
+        MPI_Fetch_and_op(&value, &result, MPI_INT64_T, 1, 0, MPI_LXOR, window);
+        test_end();
+        MPI_Win_flush_all(window);
+        MPI_Win_unlock_all(window);
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Win_free(&window);
+    perf_end();
+    MPI_Finalize();
+}
+
+void mpi_atomic_min_test()
+{
+    MPI_Init(NULL, NULL);
+    perf_init();
+    int my_pe, numpes;
+    MPI_Win window;
+    MPI_Comm_rank(MPI_COMM_WORLD, &my_pe);
+    MPI_Comm_size(MPI_COMM_WORLD, &numpes);
+    int64_t result, value;
+    value = my_pe;
+
+    MPI_Win_create(&value, sizeof(int64_t), sizeof(int64_t), MPI_INFO_NULL, MPI_COMM_WORLD, &window);
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    if(my_pe == 0)
+    {
+        MPI_Win_lock_all(0, window);
+        test_start();
+        MPI_Fetch_and_op(&value, &result, MPI_INT64_T, 1, 0, MPI_MIN, window);
+        test_end();
+        MPI_Win_flush_all(window);
+        MPI_Win_unlock_all(window);
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Win_free(&window);
+    perf_end();
+    MPI_Finalize();
+}
+
+void mpi_atomic_max_test()
+{
+    MPI_Init(NULL, NULL);
+    perf_init();
+    int my_pe, numpes;
+    MPI_Win window;
+    MPI_Comm_rank(MPI_COMM_WORLD, &my_pe);
+    MPI_Comm_size(MPI_COMM_WORLD, &numpes);
+    int64_t result, value;
+    value = my_pe;
+
+    MPI_Win_create(&value, sizeof(int64_t), sizeof(int64_t), MPI_INFO_NULL, MPI_COMM_WORLD, &window);
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    if(my_pe == 0)
+    {
+        MPI_Win_lock_all(0, window);
+        test_start();
+        MPI_Fetch_and_op(&value, &result, MPI_INT64_T, 1, 0, MPI_MAX, window);
+        test_end();
+        MPI_Win_flush_all(window);
+        MPI_Win_unlock_all(window);
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Win_free(&window);
+    perf_end();
+    MPI_Finalize();
+}
+
 #undef TEST_MPI
 #endif
 
@@ -292,10 +567,20 @@ void main()
     //xbrtime_atomic_add_test();
     //xbrtime_atomic_inc_test();
     //xbrtime_atomic_compare_swap_test();
+    //xbrtime_atomic_land_test();
+    //xbrtime_atomic_lor_test();
+    //xbrtime_atomic_lxor_test();
+    //xbrtime_atomic_min_test();
+    //xbrtime_atomic_max_test();
     //shmem_atomic_add_test();
     //shmem_atomic_inc_test();
     //shmem_atomic_compare_swap_test();
     //mpi_atomic_add_test();
     //mpi_atomic_inc_test();
     //mpi_atomic_compare_swap_test();
+    //mpi_atomic_land_test();
+    //mpi_atomic_lor_test();
+    //mpi_atomic_lxor_test();
+    //mpi_atomic_min_test();
+    //mpi_atomic_max_test();
 }
