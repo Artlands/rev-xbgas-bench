@@ -1,13 +1,3 @@
-// Test file for atomic operation instruction count comparison between xBGAS, OpenSHMEM, & MPI
-// XBGAS Atomics: Comparable: xbrtime_typename_atomic_add, xbrtime_typename_atomic_compare_swap
-//                Not Comparable: xbrtime_typename_atomic_land, xbrtime_typename_atomic_lor, xbrtime_typename_atomic_xor, xbrtime_typename_atomic_min,
-//                                xbrtime_typename_atomic_max
-// OpenSHMEM Atomics: Comparable: shmem_typename_atomic_compare_swap, shmem_typename_atomic_inc, shmem_typename_atomic_add,
-//                    Not Comparable: shmem_typename_atomic_fetch, shmem_typename_atomic_set, shmem_typename_atomic_swap, shmem_typename_atomic_fetch_inc, shmem_typename_atomic_fetch_add,
-//                                    shmem_typename_atomic_fetch_and, shmem_typename_atomic_and, shmem_typename_atomic_fetch_or, shmem_typename_atomic_or, shmem_typename_atomic_fetch_xor, shmem_typename_atomic_xor
-// MPI Atomics: Comparable: MPI_fetch_and_op, MPI_compare_and_swap
-//              Not Comparable: Comparable: MPI_get_accumulate
-
 #include <stdint.h>
 
 //#define TEST_XBGAS
@@ -25,6 +15,7 @@ void xbrtime_atomic_add_test()
     xbrtime_init();
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
+    int64_t ret;
     int64_t* value = (int64_t*) xbrtime_malloc(sizeof(int64_t));
     *value = my_pe;
 
@@ -34,7 +25,7 @@ void xbrtime_atomic_add_test()
 
     if(my_pe == 0)
     {
-        xbrtime_int64_atomic_add(value, 1000000000, 1);
+        ret = xbrtime_int64_atomic_add(value, 1000000000, 1);
     }
 
     (*((unsigned long long *)(FLAG))) = 0;
@@ -49,6 +40,7 @@ void xbrtime_atomic_inc_test()
     xbrtime_init();
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
+    int64_t ret;
     int64_t* value = (int64_t*) xbrtime_malloc(sizeof(int64_t));
     *value = my_pe;
 
@@ -58,7 +50,7 @@ void xbrtime_atomic_inc_test()
 
     if(my_pe == 0)
     {
-        xbrtime_int64_atomic_add(value, 1, 1);
+        ret = xbrtime_int64_atomic_add(value, 1, 1);
     }
 
     (*((unsigned long long *)(FLAG))) = 0;
@@ -73,6 +65,7 @@ void xbrtime_atomic_compare_swap_test()
     xbrtime_init();
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
+    int64_t ret;
     int64_t* value = (int64_t*) xbrtime_malloc(sizeof(int64_t));
     *value = my_pe;
 
@@ -82,7 +75,7 @@ void xbrtime_atomic_compare_swap_test()
 
     if(my_pe == 0)
     {
-        xbrtime_int64_atomic_compare_swap(value, 1, 1);
+        ret = xbrtime_int64_atomic_compare_swap(value, 1, 1);
     }
 
     (*((unsigned long long *)(FLAG))) = 0;
@@ -92,11 +85,12 @@ void xbrtime_atomic_compare_swap_test()
     xbrtime_close();
 }
 
-void xbrtime_atomic_land_test()
+void xbrtime_atomic_band_test()
 {
     xbrtime_init();
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
+    int64_t ret;
     int64_t* value = (int64_t*) xbrtime_malloc(sizeof(int64_t));
     *value = my_pe;
 
@@ -106,7 +100,7 @@ void xbrtime_atomic_land_test()
 
     if(my_pe == 0)
     {
-        xbrtime_int64_atomic_land(value, *value, 1);
+        ret = xbrtime_int64_atomic_band(value, *value, 1);
     }
 
     (*((unsigned long long *)(FLAG))) = 0;
@@ -116,11 +110,12 @@ void xbrtime_atomic_land_test()
     xbrtime_close();
 }
 
-void xbrtime_atomic_lor_test()
+void xbrtime_atomic_bor_test()
 {
     xbrtime_init();
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
+    int64_t ret;
     int64_t* value = (int64_t*) xbrtime_malloc(sizeof(int64_t));
     *value = my_pe;
 
@@ -130,7 +125,7 @@ void xbrtime_atomic_lor_test()
 
     if(my_pe == 0)
     {
-        xbrtime_int64_atomic_lor(value, *value, 1);
+        ret = xbrtime_int64_atomic_bor(value, *value, 1);
     }
 
     (*((unsigned long long *)(FLAG))) = 0;
@@ -140,11 +135,12 @@ void xbrtime_atomic_lor_test()
     xbrtime_close();
 }
 
-void xbrtime_atomic_lxor_test()
+void xbrtime_atomic_bxor_test()
 {
     xbrtime_init();
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
+    int64_t ret;
     int64_t* value = (int64_t*) xbrtime_malloc(sizeof(int64_t));
     *value = my_pe;
 
@@ -154,7 +150,7 @@ void xbrtime_atomic_lxor_test()
 
     if(my_pe == 0)
     {
-        xbrtime_int64_atomic_lxor(value, *value, 1);
+        ret = xbrtime_int64_atomic_bxor(value, *value, 1);
     }
 
     (*((unsigned long long *)(FLAG))) = 0;
@@ -169,6 +165,7 @@ void xbrtime_atomic_min_test()
     xbrtime_init();
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
+    int64_t ret;
     uint64_t* value = (uint64_t*) xbrtime_malloc(sizeof(uint64_t));
     *value = my_pe;
 
@@ -178,7 +175,7 @@ void xbrtime_atomic_min_test()
 
     if(my_pe == 0)
     {
-        xbrtime_uint64_atomic_min(value, *value, 1);
+        ret = xbrtime_uint64_atomic_min(value, *value, 1);
     }
 
     (*((unsigned long long *)(FLAG))) = 0;
@@ -193,6 +190,7 @@ void xbrtime_atomic_max_test()
     xbrtime_init();
     int my_pe = xbrtime_mype();
     int numpes = xbrtime_num_pes();
+    int64_t ret;
     uint64_t* value = (uint64_t*) xbrtime_malloc(sizeof(uint64_t));
     *value = my_pe;
 
@@ -202,7 +200,7 @@ void xbrtime_atomic_max_test()
 
     if(my_pe == 0)
     {
-        xbrtime_uint64_atomic_max(value, *value, 1);
+        ret = xbrtime_uint64_atomic_max(value, *value, 1);
     }
 
     (*((unsigned long long *)(FLAG))) = 0;
@@ -228,6 +226,7 @@ void shmem_atomic_add_test()
     perf_init();
     int my_pe = shmem_my_pe();
     int numpes = shmem_n_pes();
+    long long ret;
     long long* value = (long long*) shmem_malloc(sizeof(long long));
     *value = my_pe;
 
@@ -236,7 +235,7 @@ void shmem_atomic_add_test()
     if(my_pe == 0)
     {
         test_start();
-        shmem_longlong_atomic_add(value, 1000000000, 1);
+        ret = shmem_longlong_atomic_fetch_add(value, 1000000000, 1);
         test_end();
     }
 
@@ -252,6 +251,7 @@ void shmem_atomic_inc_test()
     perf_init();
     int my_pe = shmem_my_pe();
     int numpes = shmem_n_pes();
+    long long ret;
     long long* value = (long long*) shmem_malloc(sizeof(long long));
     *value = my_pe;
 
@@ -260,7 +260,7 @@ void shmem_atomic_inc_test()
     if(my_pe == 0)
     {
         test_start();
-        shmem_longlong_atomic_inc(value, 1);
+        ret = shmem_longlong_atomic_fetch_inc(value, 1);
         test_end();
     }
 
@@ -276,6 +276,7 @@ void shmem_atomic_compare_swap_test()
     perf_init();
     int my_pe = shmem_my_pe();
     int numpes = shmem_n_pes();
+    long long ret;
     long long* value = (long long*) shmem_malloc(sizeof(long long));
     *value = my_pe;
 
@@ -284,7 +285,82 @@ void shmem_atomic_compare_swap_test()
     if(my_pe == 0)
     {
         test_start();
-        shmem_longlong_atomic_compare_swap(value, 1, *value, 1);
+        ret = shmem_longlong_atomic_compare_swap(value, 1, *value, 1);
+        test_end();
+    }
+
+    shmem_barrier_all();
+    shmem_free(value);
+    perf_end();
+    shmem_finalize();
+}
+
+void shmem_atomic_band_test()
+{
+    shmem_init();
+    perf_init();
+    int my_pe = shmem_my_pe();
+    int numpes = shmem_n_pes();
+    long long ret;
+    long long* value = (long long*) shmem_malloc(sizeof(long long));
+    *value = my_pe;
+
+    shmem_barrier_all();
+
+    if(my_pe == 0)
+    {
+        test_start();
+        ret = shmem_longlong_atomic_fetch_and(value, *value, 1);
+        test_end();
+    }
+
+    shmem_barrier_all();
+    shmem_free(value);
+    perf_end();
+    shmem_finalize();
+}
+
+void shmem_atomic_bor_test()
+{
+    shmem_init();
+    perf_init();
+    int my_pe = shmem_my_pe();
+    int numpes = shmem_n_pes();
+    long long ret;
+    long long* value = (long long*) shmem_malloc(sizeof(long long));
+    *value = my_pe;
+
+    shmem_barrier_all();
+
+    if(my_pe == 0)
+    {
+        test_start();
+        ret = shmem_longlong_atomic_fetch_or(value, *value, 1);
+        test_end();
+    }
+
+    shmem_barrier_all();
+    shmem_free(value);
+    perf_end();
+    shmem_finalize();
+}
+
+void shmem_atomic_bxor_test()
+{
+    shmem_init();
+    perf_init();
+    int my_pe = shmem_my_pe();
+    int numpes = shmem_n_pes();
+    long long ret;
+    long long* value = (long long*) shmem_malloc(sizeof(long long));
+    *value = my_pe;
+
+    shmem_barrier_all();
+
+    if(my_pe == 0)
+    {
+        test_start();
+        ret = shmem_longlong_atomic_fetch_xor(value, *value, 1);
         test_end();
     }
 
@@ -404,7 +480,7 @@ void mpi_atomic_compare_swap_test()
     MPI_Finalize();
 }
 
-void mpi_atomic_land_test()
+void mpi_atomic_band_test()
 {
     MPI_Init(NULL, NULL);
     perf_init();
@@ -423,7 +499,7 @@ void mpi_atomic_land_test()
     {
         MPI_Win_lock_all(0, window);
         test_start();
-        MPI_Fetch_and_op(&value, &result, MPI_INT64_T, 1, 0, MPI_LAND, window);
+        MPI_Fetch_and_op(&value, &result, MPI_INT64_T, 1, 0, MPI_BAND, window);
         test_end();
         MPI_Win_flush_all(window);
         MPI_Win_unlock_all(window);
@@ -435,7 +511,7 @@ void mpi_atomic_land_test()
     MPI_Finalize();
 }
 
-void mpi_atomic_lor_test()
+void mpi_atomic_bor_test()
 {
     MPI_Init(NULL, NULL);
     perf_init();
@@ -454,7 +530,7 @@ void mpi_atomic_lor_test()
     {
         MPI_Win_lock_all(0, window);
         test_start();
-        MPI_Fetch_and_op(&value, &result, MPI_INT64_T, 1, 0, MPI_LOR, window);
+        MPI_Fetch_and_op(&value, &result, MPI_INT64_T, 1, 0, MPI_BOR, window);
         test_end();
         MPI_Win_flush_all(window);
         MPI_Win_unlock_all(window);
@@ -466,7 +542,7 @@ void mpi_atomic_lor_test()
     MPI_Finalize();
 }
 
-void mpi_atomic_lxor_test()
+void mpi_atomic_bxor_test()
 {
     MPI_Init(NULL, NULL);
     perf_init();
@@ -485,7 +561,7 @@ void mpi_atomic_lxor_test()
     {
         MPI_Win_lock_all(0, window);
         test_start();
-        MPI_Fetch_and_op(&value, &result, MPI_INT64_T, 1, 0, MPI_LXOR, window);
+        MPI_Fetch_and_op(&value, &result, MPI_INT64_T, 1, 0, MPI_BXOR, window);
         test_end();
         MPI_Win_flush_all(window);
         MPI_Win_unlock_all(window);
@@ -567,20 +643,23 @@ void main()
     //xbrtime_atomic_add_test();
     //xbrtime_atomic_inc_test();
     //xbrtime_atomic_compare_swap_test();
-    //xbrtime_atomic_land_test();
-    //xbrtime_atomic_lor_test();
-    //xbrtime_atomic_lxor_test();
+    //xbrtime_atomic_band_test();
+    //xbrtime_atomic_bor_test();
+    //xbrtime_atomic_bxor_test();
     //xbrtime_atomic_min_test();
     //xbrtime_atomic_max_test();
     //shmem_atomic_add_test();
     //shmem_atomic_inc_test();
     //shmem_atomic_compare_swap_test();
+    //shmem_atomic_band_test();
+    //shmem_atomic_bor_test();
+    //shmem_atomic_bxor_test();
     //mpi_atomic_add_test();
     //mpi_atomic_inc_test();
     //mpi_atomic_compare_swap_test();
-    //mpi_atomic_land_test();
-    //mpi_atomic_lor_test();
-    //mpi_atomic_lxor_test();
+    //mpi_atomic_band_test();
+    //mpi_atomic_bor_test();
+    //mpi_atomic_bxor_test();
     //mpi_atomic_min_test();
     //mpi_atomic_max_test();
 }

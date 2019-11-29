@@ -9,7 +9,8 @@ void test_##_typename##_##_op(_type op_val)                                     
 {                                                                                                                           \
     int my_pe = xbrtime_mype();                                                                                             \
     _type *source_val = (_type*) xbrtime_malloc(sizeof(_type));                                                             \
-    *source_val = (_type) my_pe;                                                                                            \
+    *source_val = (_type) ((my_pe+1) * 100);                                                                                           \
+    _type ret_val = 999;													\
                                                                                                                             \
     if(my_pe == 0)                                                                                                          \
     {                                                                                                                       \
@@ -18,18 +19,18 @@ void test_##_typename##_##_op(_type op_val)                                     
                                                                                                                             \
     xbrtime_barrier();                                                                                                         \
                                                                                                                             \
-    printf("Before atomic operation\tPE: %d\tSource value: "_format"\tOp value: "_format"\n", my_pe, *source_val, op_val);  \
+    printf("Before atomic operation\tPE: %d\tSource value: "_format"\tReturn value: "_format"\tOp value: "_format"\n", my_pe, *source_val, ret_val, op_val);  \
                                                                                                                             \
     xbrtime_barrier();                                                                                                         \
                                                                                                                             \
     if(my_pe == 0)                                                                                                          \
     {                                                                                                                       \
-        xbrtime_##_typename##_atomic_##_op(source_val, op_val, 1);                                                          \
+        ret_val = xbrtime_##_typename##_atomic_##_op(source_val, op_val, 1);                                                          \
     }                                                                                                                       \
                                                                                                                             \
     xbrtime_barrier();                                                                                                         \
                                                                                                                             \
-    printf("After atomic operation\tPE: %d\tSource value: "_format"\tOp value: "_format"\n", my_pe, *source_val, op_val);   \
+    printf("After atomic operation\tPE: %d\tSource value: "_format"\tReturn value: "_format"\tOp value: "_format"\n", my_pe, *source_val, ret_val, op_val);   \
                                                                                                                             \
     xbrtime_barrier();                                                                                                         \
                                                                                                                             \
@@ -51,38 +52,38 @@ void test_##_typename##_##_op(_type op_val)                                     
     TEST_ATOMIC(long long, longlong, add, "%lld")
     TEST_ATOMIC(int64_t, int64, add, "%lld")
 
-    TEST_ATOMIC(unsigned int, uint, lor, "%u")
-    TEST_ATOMIC(unsigned long, ulong, lor, "%u")
-    TEST_ATOMIC(uint32_t, uint32, lor, "%u")
-    TEST_ATOMIC(int, int, lor, "%d")
-    TEST_ATOMIC(long, long, lor, "%d")
-    TEST_ATOMIC(int32_t, int32, lor, "%d")
-    TEST_ATOMIC(unsigned long long, ulonglong, lor, "%llu")
-    TEST_ATOMIC(uint64_t, uint64, lor, "%llu")
-    TEST_ATOMIC(long long, longlong, lor, "%lld")
-    TEST_ATOMIC(int64_t, int64, lor, "%lld")
+    TEST_ATOMIC(unsigned int, uint, bor, "%u")
+    TEST_ATOMIC(unsigned long, ulong, bor, "%u")
+    TEST_ATOMIC(uint32_t, uint32, bor, "%u")
+    TEST_ATOMIC(int, int, bor, "%d")
+    TEST_ATOMIC(long, long, bor, "%d")
+    TEST_ATOMIC(int32_t, int32, bor, "%d")
+    TEST_ATOMIC(unsigned long long, ulonglong, bor, "%llu")
+    TEST_ATOMIC(uint64_t, uint64, bor, "%llu")
+    TEST_ATOMIC(long long, longlong, bor, "%lld")
+    TEST_ATOMIC(int64_t, int64, bor, "%lld")
 
-    TEST_ATOMIC(unsigned int, uint, land, "%u")
-    TEST_ATOMIC(unsigned long, ulong, land, "%u")
-    TEST_ATOMIC(uint32_t, uint32, land, "%u")
-    TEST_ATOMIC(int, int, land, "%d")
-    TEST_ATOMIC(long, long, land, "%d")
-    TEST_ATOMIC(int32_t, int32, land, "%d")
-    TEST_ATOMIC(unsigned long long, ulonglong, land, "%llu")
-    TEST_ATOMIC(uint64_t, uint64, land, "%llu")
-    TEST_ATOMIC(long long, longlong, land, "%lld")
-    TEST_ATOMIC(int64_t, int64, land, "%lld")
+    TEST_ATOMIC(unsigned int, uint, band, "%u")
+    TEST_ATOMIC(unsigned long, ulong, band, "%u")
+    TEST_ATOMIC(uint32_t, uint32, band, "%u")
+    TEST_ATOMIC(int, int, band, "%d")
+    TEST_ATOMIC(long, long, band, "%d")
+    TEST_ATOMIC(int32_t, int32, band, "%d")
+    TEST_ATOMIC(unsigned long long, ulonglong, band, "%llu")
+    TEST_ATOMIC(uint64_t, uint64, band, "%llu")
+    TEST_ATOMIC(long long, longlong, band, "%lld")
+    TEST_ATOMIC(int64_t, int64, band, "%lld")
 
-    TEST_ATOMIC(unsigned int, uint, lxor, "%u")
-    TEST_ATOMIC(unsigned long, ulong, lxor, "%u")
-    TEST_ATOMIC(uint32_t, uint32, lxor, "%u")
-    TEST_ATOMIC(int, int, lxor, "%d")
-    TEST_ATOMIC(long, long, lxor, "%d")
-    TEST_ATOMIC(int32_t, int32, lxor, "%d")
-    TEST_ATOMIC(unsigned long long, ulonglong, lxor, "%llu")
-    TEST_ATOMIC(uint64_t, uint64, lxor, "%llu")
-    TEST_ATOMIC(long long, longlong, lxor, "%lld")
-    TEST_ATOMIC(int64_t, int64, lxor, "%lld")
+    TEST_ATOMIC(unsigned int, uint, bxor, "%u")
+    TEST_ATOMIC(unsigned long, ulong, bxor, "%u")
+    TEST_ATOMIC(uint32_t, uint32, bxor, "%u")
+    TEST_ATOMIC(int, int, bxor, "%d")
+    TEST_ATOMIC(long, long, bxor, "%d")
+    TEST_ATOMIC(int32_t, int32, bxor, "%d")
+    TEST_ATOMIC(unsigned long long, ulonglong, bxor, "%llu")
+    TEST_ATOMIC(uint64_t, uint64, bxor, "%llu")
+    TEST_ATOMIC(long long, longlong, bxor, "%lld")
+    TEST_ATOMIC(int64_t, int64, bxor, "%lld")
 
     TEST_ATOMIC(unsigned int, uint, min, "%u")
     TEST_ATOMIC(unsigned long, ulong, min, "%u")
@@ -123,16 +124,7 @@ int main(int argc, char **argv)
 {
     xbrtime_init();
 
-    test_uint_compare_swap(1);
-    test_ulong_compare_swap(0);
-    test_uint32_compare_swap(0);
-    test_int_compare_swap(0);
-    test_long_compare_swap(0);
-    test_int32_compare_swap(1);
-    test_ulonglong_compare_swap(1);
-    test_uint64_compare_swap(0);
-    test_longlong_compare_swap(0);
-    test_int64_compare_swap(1);
+    test_int_compare_swap(200);
 
     xbrtime_close();
     return 0;
