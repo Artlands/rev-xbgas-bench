@@ -51,7 +51,7 @@ void xbgas_large_broadcast_tree_test()
     int numpes = xbrtime_num_pes();
     int nelems = LARGE_NELEMS;
     int *message = (int*) xbrtime_malloc(sizeof(int) * nelems);
-
+	
     if(my_pe == 0)
     {
         for(int i = 0; i < nelems; i++)
@@ -632,7 +632,7 @@ void xbgas_small_alltoall_test()
 
     (*((unsigned long long *)(FLAG))) = 1;
 
-    xbrtime_int_all_to_all_shift_exchange(message, message, 1, 1, nelems);
+    xbrtime_int_alltoall_shift_exchange(message, message, 1, 1, nelems);
 
     (*((unsigned long long *)(FLAG))) = 0;
 
@@ -660,7 +660,7 @@ void xbgas_large_alltoall_test()
 
     (*((unsigned long long *)(FLAG))) = 1;
 
-    xbrtime_int_all_to_all_shift_exchange(message, message, 1, 1, nelems);
+    xbrtime_int_alltoall_shift_exchange(message, message, 1, 1, nelems);
 
     (*((unsigned long long *)(FLAG))) = 0;
 
@@ -755,18 +755,18 @@ void main()
     test_start();
 
     //shmem_broadcast32(small_arr, small_arr, SMALL_NELEMS, 0, 0, 0, numpes, broadcast_psync);
-    //shmem_broadcast32(long_arr, long_arr, LARGE_NELEMS, 0, 0, 0, numpes, broadcast_psync);
+    //shmem_broadcast32(large_arr, large_arr, LARGE_NELEMS, 0, 0, 0, numpes, broadcast_psync);
     //shmem_int_sum_to_all(small_arr, small_arr, SMALL_NELEMS, 0, 0, numpes, reduce_pwrk, reduce_psync);
-    //shmem_int_sum_to_all(long_arr, long_arr, LARGE_NELEMS, 0, 0, numpes, reduce_pwrk, reduce_psync);
-    //shmem_collect32(small_arr, small_arr, SMALL_NELEMS/numpes, 0, 0, numpes, collect_psync);
-    //shmem_collect32(long_arr, long_arr, LARGE_NELEMS/numpes, 0, 0, numpes, collect_psync);
-    //shmem_alltoalls32(dest, source, 1, 1, size_t SMALL_NELEMS/numpes, 0, 0, numpes, alltoalls_psync);
-    //shmem_alltoalls32(dest, source, 1, 1, size_t LARGE_NELEMS/numpes, 0, 0, numpes, alltoalls_psync)
+    //shmem_int_sum_to_all(large_arr, large_arr, LARGE_NELEMS, 0, 0, numpes, reduce_pwrk, reduce_psync);
+    //shmem_fcollect32(small_arr, small_arr, SMALL_NELEMS/numpes, 0, 0, numpes, collect_psync);
+    //shmem_fcollect32(large_arr, large_arr, LARGE_NELEMS/numpes, 0, 0, numpes, collect_psync);
+    //shmem_alltoalls32(small_arr, small_arr, 1, 1, SMALL_NELEMS/numpes, 0, 0, numpes, alltoalls_psync);
+    //shmem_alltoalls32(large_arr, large_arr, 1, 1, LARGE_NELEMS/numpes, 0, 0, numpes, alltoalls_psync);
 
     test_end();
     shmem_barrier_all();
 
-    shmem_free(long_arr);
+    shmem_free(large_arr);
     shmem_free(small_arr);
     perf_end();
     shmem_finalize();
@@ -787,11 +787,11 @@ void main()
     int i, my_pe, numpes;
     MPI_Comm_rank(MPI_COMM_WORLD, &my_pe);
     MPI_Comm_size(MPI_COMM_WORLD, &numpes);
-    int small_arr[SMALL_NELEMS], large_arr[LARGE_NELEMS];
-    int small_counts = {64, 64, 64, 64};
-    int small_disp = {0, 64, 128, 192};
-    int large_counts = {6400, 6400, 6400, 6400};
-    int large_disp = {0, 6400, 12800, 19200};
+    int small_arr[SMALL_NELEMS], large_arr[LARGE_NELEMS], small_arr2[SMALL_NELEMS], large_arr2[LARGE_NELEMS];
+    int small_counts[4] = {64, 64, 64, 64};
+    int small_disp[4] = {0, 64, 128, 192};
+    int large_counts[4] = {6400, 6400, 6400, 6400};
+    int large_disp[4] = {0, 6400, 12800, 19200};
 
     for(i = 0; i < SMALL_NELEMS; i++)
     {
@@ -808,16 +808,16 @@ void main()
     test_start();
     //MPI_Bcast(&small_arr, SMALL_NELEMS, MPI_INT, 0, MPI_COMM_WORLD);
     //MPI_Bcast(&large_arr, LARGE_NELEMS, MPI_INT, 0, MPI_COMM_WORLD);
-    //MPI_Reduce(&small_arr, &small_arr, SMALL_NELEMS, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-    //MPI_Reduce(&large_arr, &large_arr, LARGE_NELEMS, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-    //MPI_Allreduce(&small_arr, &small_arr, SMALL_NELEMS, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-    //MPI_Allreduce(&large_arr, &large_arr, LARGE_NELEMS, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-    //MPI_Scatterv(&small_arr, &small_counts, &small_disp, MPI_INT, &small_arr, SMALL_NELEMS/numpes, MPI_INT, 0, MPI_COMM_WORLD);
-    //MPI_Scatterv(&large_arr, &large_counts, &large_disp, MPI_INT, &large_arr, LARGE_NELEMS/numpes, MPI_INT, 0, MPI_COMM_WORLD);
-    //MPI_Gatherv(&small_arr, SMALL_NELEMS/numpes, MPI_INT, &small_arr, &small_counts, &small_disp, MPI_INT, 0, MPI_COMM_WORLD);
-    //MPI_Gatherv(&large_arr, LARGE_NELEMS/numpes, MPI_INT, &large_arr, &large_counts, &large_disp, MPI_INT, 0, MPI_COMM_WORLD);
-    //MPI_Allgatherv(&small_arr, SMALL_NELEMS/numpes, MPI_INT, &small_arr, &small_counts, &small_disp, MPI_INT, MPI_COMM_WORLD);
-    //MPI_Allgatherv(&large_arr, LARGE_NELEMS/numpes, MPI_INT, &large_arr, &large_counts, &large_disp, MPI_INT, MPI_COMM_WORLD);
+    //MPI_Reduce(&small_arr, &small_arr2, SMALL_NELEMS, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    //MPI_Reduce(&large_arr, &large_arr2, LARGE_NELEMS, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    //MPI_Allreduce(&small_arr, &small_arr2, SMALL_NELEMS, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+    //MPI_Allreduce(&large_arr, &large_arr2, LARGE_NELEMS, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+    //MPI_Scatterv(&small_arr, small_counts, small_disp, MPI_INT, &small_arr, SMALL_NELEMS/numpes, MPI_INT, 0, MPI_COMM_WORLD);
+    //MPI_Scatterv(&large_arr, large_counts, large_disp, MPI_INT, &large_arr, LARGE_NELEMS/numpes, MPI_INT, 0, MPI_COMM_WORLD);
+    //MPI_Gatherv(&small_arr, SMALL_NELEMS/numpes, MPI_INT, &small_arr, small_counts, small_disp, MPI_INT, 0, MPI_COMM_WORLD);
+    //MPI_Gatherv(&large_arr, LARGE_NELEMS/numpes, MPI_INT, &large_arr, large_counts, large_disp, MPI_INT, 0, MPI_COMM_WORLD);
+    //MPI_Allgatherv(&small_arr, SMALL_NELEMS/numpes, MPI_INT, &small_arr, small_counts, small_disp, MPI_INT, MPI_COMM_WORLD);
+    //MPI_Allgatherv(&large_arr, LARGE_NELEMS/numpes, MPI_INT, &large_arr, large_counts, large_disp, MPI_INT, MPI_COMM_WORLD);
     //MPI_Alltoall(&small_arr, SMALL_NELEMS/numpes, MPI_INT, &small_arr, SMALL_NELEMS/numpes, MPI_INT, MPI_COMM_WORLD);
     //MPI_Alltoall(&large_arr, LARGE_NELEMS/numpes, MPI_INT, &large_arr, LARGE_NELEMS/numpes, MPI_INT, MPI_COMM_WORLD);
     test_end();
