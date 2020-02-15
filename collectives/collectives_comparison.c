@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-//#define TEST_XBGAS
+#define TEST_XBGAS
 //#define TEST_SHMEM
 //#define TEST_MPI
 
