@@ -1,9 +1,12 @@
 #include "xbrtime.h"
 
-#define NELEMS 100000
-//#define TEST_BROADCAST_TREE
+#define NELEMS 10000
+#define TEST_BROADCAST_TREE
 //#define TEST_BROADCAST_VDG
-//#define TEST_LOOP
+//#define TEST_PUT_LOOP
+//#define TEST_REDUCE_TREE
+//#define TEST_REDUCE_RABEN
+//#define TEST_GET_LOOP
 
 int main()
 {
@@ -18,7 +21,7 @@ int main()
         dest_vals[i] = 999;
     }
 
-    printf("Pre-Broadcast - PE:%d b_vals[0]: %d b_vals[NELEMS-1]: %d dest_vals[0]: %d dest_vals[NELEMS-1]: %d\n",
+    printf("Pre-Op - PE:%d b_vals[0]: %d b_vals[NELEMS-1]: %d dest_vals[0]: %d dest_vals[NELEMS-1]: %d\n",
             my_pe, b_vals[0], b_vals[NELEMS-1], dest_vals[0], dest_vals[NELEMS-1]);
 
     xbrtime_barrier();
@@ -27,19 +30,25 @@ int main()
     xbrtime_int_broadcast_tree(dest_vals, b_vals, NELEMS, 1, 0);
 #elif defined (TEST_BROADCAST_VDG)
     xbrtime_int_broadcast_van_de_geijn(dest_vals, b_vals, NELEMS, 1, 0);
-#elif defined (TEST_LOOP)
-    // for 2 PEs, PE0 stores data to PE1
-    // for 4 PEs, PE0 stores data to PE1, 2, 3
-    // ......
+#elif defined (TEST_PUT_LOOP)
     if(my_pe == 0)
         for(i = 1 ; i < xbrtime_num_pes(); i++){
             xbrtime_int_put(dest_vals, b_vals, NELEMS, 1, my_pe+i);
+    }
+#elif defined (TEST_REDUCE_TREE)
+    xbrtime_int_reduce_sum_tree(dest_vals, b_vals, NELEMS, 1, 0);
+#elif defined (TEST_REDUCE_RABEN)
+    xbrtime_int_reduce_sum_rabenseifner(dest_vals, b_vals, NELEMS, 1, 0);
+#elif defined (TEST_GET_LOOP)
+    if(my_pe == 0)
+        for(i = 1 ; i < xbrtime_num_pes(); i++){
+            xbrtime_int_get(dest_vals, b_vals, NELEMS, 1, my_pe+i);
     }
 #endif
 
     xbrtime_barrier();
 
-    printf("Post-Broadcast - PE:%d b_vals[0]: %d b_vals[NELEMS-1]: %d dest_vals[0]: %d dest_vals[NELEMS-1]: %d\n",
+    printf("Post-Op - PE:%d b_vals[0]: %d b_vals[NELEMS-1]: %d dest_vals[0]: %d dest_vals[NELEMS-1]: %d\n",
             my_pe, b_vals[0], b_vals[NELEMS-1], dest_vals[0], dest_vals[NELEMS-1]);
 
     xbrtime_free(b_vals);
