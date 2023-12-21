@@ -41,7 +41,7 @@
 #include <time.h>
 
 /*
- * This is the master version number for this set of 
+ * This is the main version number for this set of 
  * NPB benchmarks. It is in an obscure place so people
  * won't accidentally change it. 
  */
