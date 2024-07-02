@@ -33,12 +33,15 @@ int main()
     printf("Pre-Gather - PE %d src_array = %d %d %d %d %d\n", my_pe, src_array[0], src_array[1], src_array[2], src_array[3], src_array[4]);
 
     xbrtime_barrier();
+    
+    if (my_pe == 3)
+      printf("PE: %d gathers values from other PEs\n", my_pe);
 
     xbrtime_int_gather(dest_array, src_array, pe_msg_sz, pe_disp, nelems, 3);
 
     xbrtime_barrier();
 
-    printf("Pre-Gather - PE %d dest_array = %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n", my_pe, dest_array[0], dest_array[1], dest_array[2], dest_array[3],
+    printf("Post-Gather - PE %d dest_array = %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n", my_pe, dest_array[0], dest_array[1], dest_array[2], dest_array[3],
                                                                                 dest_array[4], dest_array[5], dest_array[6], dest_array[7],
                                                                                 dest_array[8], dest_array[9], dest_array[10], dest_array[11],
                                                                                 dest_array[12], dest_array[13], dest_array[14]);

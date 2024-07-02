@@ -41,15 +41,15 @@ int main()
 
 //      ld_get_test();
 
-//	test_broadcast3();
+	// test_broadcast3();
 
-//	test_reduce1();
+	// test_reduce1();
 
-//	test_scatter1();
+	// test_scatter1();
 
-//	test_gather2();
+	test_gather2();
 
-	//test_alltoall3();
+	// test_alltoall3();
 }
 
 void barrier_test()

@@ -43,7 +43,7 @@
 void
 do_abort(char* f)
 {
-  fprintf(stderr, "%s\n", f);
+  printf( "Abort: %s\n", f);
 }
 
 u64Int srcBuf[] = {
@@ -52,7 +52,7 @@ u64Int srcBuf[] = {
 u64Int targetBuf[sizeof(srcBuf) / sizeof(u64Int)];
 
 /* Allocate main table (in global memory) */
-u64Int *HPCC_Table;
+// u64Int *HPCC_Table;
 
 int main(int argc, char **argv)
 {
@@ -66,11 +66,11 @@ int main(int argc, char **argv)
   u64Int MinLocalTableSize; /* Integer ratio TableSize/NumProcs */
   u64Int logTableSize, TableSize;
 
-  double CPUTime;               /* CPU  time to update table */
-  double RealTime;              /* Real time to update table */
+  double CPUTime = 0.0;               /* CPU  time to update table */
+  double RealTime = 0.0;              /* Real time to update table */
 
   double TotalMem;
-  int PowerofTwo;
+  int PowerofTwo = 1;
 
   double timeBound = -1;  /* OPTIONAL time bound for execution time */
   u64Int NumUpdates_Default; /* Number of updates to table (suggested: 4x number of table entries) */
@@ -88,7 +88,7 @@ int main(int argc, char **argv)
   long *ipSync;
   int *ipWrk;
 
-  FILE *outFile = NULL;
+  // FILE *outFile = NULL;
   double *GUPs;
   double *temp_GUPs;
 
@@ -113,12 +113,13 @@ int main(int argc, char **argv)
   NumProcs = xbrtime_num_pes();
   MyProc = xbrtime_mype();
 
-  if (0 == MyProc) {
-    outFile = stdout;
-    setbuf(outFile, NULL);
-  }
+  // if (0 == MyProc) {
+  //   outFile = stdout;
+  //   setbuf(outFile, NULL);
+  // }
 
-  TotalMem = 20000000; /* max single node memory */
+  // TotalMem = 20000000; /* max single node memory */
+  TotalMem = 128;
   TotalMem *= NumProcs;             /* max memory in NumProcs nodes */
 
   TotalMem /= sizeof(u64Int);
@@ -136,42 +137,50 @@ int main(int argc, char **argv)
 
   *sAbort = 0;
 
+  printf("PE:%d, LocalTableSize:%d\n",MyProc, LocalTableSize);
+
   /*Shmalloc HPCC_Table for RMA*/
-  HPCC_Table = (u64Int *)xbrtime_malloc( sizeof(u64Int)*LocalTableSize );
+  u64Int *HPCC_Table = (u64Int *)xbrtime_malloc( sizeof(u64Int) * (LocalTableSize + 1) );
+
+  // Print the address of HPCC_Table
+  printf("PE:%d, HPCC_Table:0x%p\n",MyProc, HPCC_Table);
+
   if (! HPCC_Table) *sAbort = 1;
 
   xbrtime_int_reduce_sum(rAbort, sAbort, 1, 1, 0);
   xbrtime_int_broadcast(rAbort, rAbort, 1, 1, 0);
 
   if (*rAbort > 0) {
-    if (MyProc == 0) fprintf(outFile, "Failed to allocate memory for the main table.\n");
+    if (MyProc == 0) printf( "Failed to allocate memory for the main table.\n" );
     /* check all allocations in case there are new added and their order changes */
-    if (HPCC_Table) HPCC_free( HPCC_Table );
+    if (HPCC_Table) xbrtime_free( HPCC_Table );
     goto failed_table;
   }
 
   /* Default number of global updates to table: 4x number of table entries */
   NumUpdates_Default = 4 * TableSize;
-  ProcNumUpdates = 4*LocalTableSize;
+  ProcNumUpdates = 4 * LocalTableSize;
   NumUpdates = NumUpdates_Default;
 
   if (MyProc == 0) {
-    fprintf( outFile, "Running on %d processors%s\n", NumProcs, PowerofTwo ? " (PowerofTwo)" : "");
-    fprintf( outFile, "Total Main table size = 2^" FSTR64 " = " FSTR64 " words\n",logTableSize, TableSize );
+    printf( "Running on %d processors%s\n", NumProcs, PowerofTwo ? " (PowerofTwo)" : "" );
+    printf( "Total Main table size = 2^" FSTR64 " * %d = " FSTR64 " words\n",logTableSize, NumProcs, TableSize );
     if (PowerofTwo)
-        fprintf( outFile, "PE Main table size = 2^" FSTR64 " = " FSTR64 " words/PE\n",
+        printf( "PE Main table size = 2^" FSTR64 " = " FSTR64 " words/PE\n",
                  (logTableSize - logNumProcs), TableSize/NumProcs );
       else
-        fprintf( outFile, "PE Main table size = (2^" FSTR64 ")/%d  = " FSTR64 " words/PE MAX\n",
+        printf( "PE Main table size = (2^" FSTR64 ")/%d  = " FSTR64 " words/PE MAX\n",
                  logTableSize, NumProcs, LocalTableSize);
 
-    fprintf( outFile, "Default number of updates (RECOMMENDED) = " FSTR64 "\tand actually done = %d\n", NumUpdates_Default,ProcNumUpdates*NumProcs);
+    printf( "Default number of updates (RECOMMENDED) = " FSTR64 "\tand actually done = %d\n", NumUpdates_Default,ProcNumUpdates*NumProcs);
   }
 
   /* Initialize main table */
-  for (i=0; i<LocalTableSize; i++)
+  for (i=0; i<LocalTableSize; i++){
     HPCC_Table[i] = MyProc;
-
+    printf("PE:%d, HPCC_Table[%d]:%d\n",MyProc,i,HPCC_Table[i]);
+  }
+  
   xbrtime_barrier();
 
   int j,k;
@@ -218,8 +227,10 @@ int main(int argc, char **argv)
   xbrtime_barrier();
 
   /* Begin timed section */
+  printf("Starting timed section\n");
   RealTime = -RTSEC();
   for (iterate = 0; iterate < niterate; iterate++) {
+    printf("Iterate:%d\n",iterate);
       *ran = (*ran << 1) ^ ((s64Int) *ran < ZERO64B ? POLY : ZERO64B);
       remote_proc = (*ran >> logTableLocal) & (numNodes - 1);
 
@@ -234,22 +245,23 @@ int main(int argc, char **argv)
 
       xbrtime_barrier();
 
-      if(verify)
-        xbrtime_longlong_atomic_add(&updates[thisPeId], 1, remote_proc);
+      // if(verify)
+      //   xbrtime_longlong_atomic_add(&updates[thisPeId], 1, remote_proc);
   }
 
   xbrtime_barrier();
 
   /* End timed section */
+  printf("Ending timed section\n");
   RealTime += RTSEC();
 
   /* Print timing results */
   if (MyProc == 0){
     *GUPs = 1e-9*NumUpdates / RealTime;
-    fprintf( outFile, "Real time used = %.6f seconds\n", RealTime );
-    fprintf( outFile, "%.9f Billion(10^9) Updates    per second [GUP/s]\n",
+    printf( "Real time used = %.6f seconds\n", RealTime );
+    printf( "%.9f Billion(10^9) Updates    per second [GUP/s]\n",
              *GUPs );
-    fprintf( outFile, "%.9f Billion(10^9) Updates/PE per second [GUP/s]\n",
+    printf( "%.9f Billion(10^9) Updates/PE per second [GUP/s]\n",
              *GUPs / NumProcs );
   }
 
@@ -288,7 +300,7 @@ int main(int argc, char **argv)
   xbrtime_free( HPCC_Table );
   failed_table:
 
-  if (0 == MyProc) if (outFile != stderr) fclose( outFile );
+  // if (0 == MyProc) if (outFile != stderr) fclose( outFile );
 
   xbrtime_barrier();
 

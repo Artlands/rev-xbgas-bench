@@ -101,27 +101,27 @@ CLINK  = $(SHMEMCC)
 #---------------------------------------------------------------------------
 # These macros are passed to the linker to help link with SHMEM correctly
 #---------------------------------------------------------------------------
-CSHMEM_LIB  = -L$(RISCV)/lib -lxbrtime -lm
+CSHMEM_LIB  = -L$(XBGAS_RUNTIME)/lib -lxbrtime -lm
 
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler to help find 'shmem.h'
 #---------------------------------------------------------------------------
-CSHMEM_INC = -I$(RISCV)/include -I$(RISCV)/lib
+CSHMEM_INC = -I$(XBGAS_RUNTIME)/include -I$(XBGAS_RUNTIME)/lib
 
 #---------------------------------------------------------------------------
 # These macros are passed to the linker to help link with MPI correctly
 #---------------------------------------------------------------------------
-CMPI_LIB = -L$(RISCV)/lib -lxbrtime -lm
+CMPI_LIB = -L$(XBGAS_RUNTIME)/lib -lxbrtime -lm
 
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler to help find 'mpi.h'
 #---------------------------------------------------------------------------
-CMPI_INC = -I$(RISCV)/include -I$(RISCV)/lib 
+CMPI_INC = -I$(XBGAS_RUNTIME)/include -I$(XBGAS_RUNTIME)/lib 
 
 #---------------------------------------------------------------------------
 # Global *compile time* flags for C programs
 #---------------------------------------------------------------------------
-CFLAGS	= -I$(RISCV)/include -std=c11 -O2
+CFLAGS	= -I$(XBGAS_RUNTIME)/include -std=c11 -O2
 # CFLAGS = -g
 
 #---------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 /* -*- mode: C; tab-width: 2; indent-tabs-mode: nil; -*- */
-#include<time.h>
-#include<sys/time.h>
+// #include<time.h>
+// #include<sys/time.h>
+#include "syscalls.h"
 
 /* Random number generator */
 #ifdef LONG_IS_64BITS
@@ -14,9 +15,12 @@
 /* For timing */
 static double RTSEC()
 {
- struct timeval tp;
- gettimeofday (&tp, NULL);
- return tp.tv_sec + tp.tv_usec/(double)1.0e6;
+//  struct timeval tp;
+//  gettimeofday (&tp, NULL);
+//  return tp.tv_sec + tp.tv_usec/(double)1.0e6;
+ struct __kernel_timespec tp;
+ rev_clock_gettime( 0, &tp );
+ return tp.tv_nsec/(double)1.0e9;
 }
 
 extern s64Int starts (u64Int);

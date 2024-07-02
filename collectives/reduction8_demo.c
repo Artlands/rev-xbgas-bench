@@ -30,6 +30,9 @@ int main()
 
 	xbrtime_barrier();
 
+  if (my_pe == 0)
+    printf("PE: %d reduce-sums values from other PEs with %d elements and %d strides\n", my_pe, 5, 2);
+
 	xbrtime_int_reduce_sum(r_val, r_val, 5, 2, 0);
 
 	xbrtime_barrier();

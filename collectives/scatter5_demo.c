@@ -51,7 +51,7 @@ int main()
 
 	xbrtime_barrier();
 
-	printf("Pre-Scatter - PE %d dest_array = %d %d %d %d %d\n", my_pe, dest_array[0], dest_array[1], dest_array[2], dest_array[3], dest_array[4]);
+	printf("Post-Scatter - PE %d dest_array = %d %d %d %d %d\n", my_pe, dest_array[0], dest_array[1], dest_array[2], dest_array[3], dest_array[4]);
 
 	xbrtime_close();
 

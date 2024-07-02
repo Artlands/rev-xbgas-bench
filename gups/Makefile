@@ -39,15 +39,14 @@
 #
 # OpenSHMEM compiler commandss
 #
-CC             = riscv64-unknown-elf-gcc
-RICSV		   = /home/bwilliams/xbgas-tools
-LD             = $(CC)
+CC             = $(RVCC)
 
-CFLAGS         = -I./include -std=c11 -I$(RISCV)/include -L$(RISCV)/lib/ -O2
-LDFLAGS        = $(CFLAGS)
+REV_CFLAGS 		 = -march=rv64gc_zifencei -mcmodel=medany -static -std=gnu11 -fno-common -fno-builtin-printf -w
+CFLAGS         = -I./include -I$(REV)/common/syscalls -I$(XBGAS_RUNTIME)/include
+LDFLAGS        = -L$(XBGAS_RUNTIME)/lib
 LIBS           = -lxbrtime -lm
 
-TARGET         = gups
+TARGET         = gups.exe
 
 SOURCES        = SHMEMRandomAccess.c
 OBJECTS        = $(SOURCES:.c=.o)
@@ -61,7 +60,7 @@ OBJECTS        = $(SOURCES:.c=.o)
 all:  $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
+	$(CC) $(REV_FLAGS) $(CFLAGS) $(LDFLAGS) $^ -o $@ $(LIBS)
 
 clean:
 	rm -f $(OBJECTS) $(TARGET)
