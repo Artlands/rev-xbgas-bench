@@ -89,7 +89,7 @@ for i in range(0, int(NPES)):
     "program" : os.getenv("REV_EXE", PROGRAM),    # Target executable
     "memSize" : MEMSIZE,                          # Memory size in bytes
     "startAddr" : "[0:0x00000000]",               # Starting address for core 0
-    "machine" : "[0:RV64GCX]",
+    "machine" : "[0:RV64GC_Xbgas]",
     "memCost" : "[0:1:10]",                       # Memory loads required 1-10 cycles
     "enable_xbgas" : 1,                           # Enable XBGAS support 
     "enable_memH": 1,                             # Enable memHierarchy support
