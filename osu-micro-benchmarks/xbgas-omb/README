@@ -1,0 +1,115 @@
+Point-to-Point OpenSHMEM Benchmarks
+-----------------------------------
+osu_oshm_put.c - Latency Test for OpenSHMEM Put Routine
+    * This benchmark measures latency of a shmem putmem operation for different
+    * data sizes. The user is required to select whether the communication
+    * buffers should be allocated in global memory or heap memory, through a
+    * parameter. The test requires exactly two PEs. PE 0 issues shmem putmem to
+    * write data at PE 1 and then calls shmem quiet. This is repeated for a
+    * fixed number of iterations, depending on the data size. The average
+    * latency per iteration is reported. A few warm-up iterations are run
+    * without timing to ignore any start-up overheads.  Both PEs call shmem
+    * barrier all after the test for each message size.
+
+osu_oshm_put_nb.c - Latency Test for OpenSHMEM Non-blocking Put Routine
+    * This benchmark measures the non-blocking latency of a shmem putmem_nbi
+    * operation for different data sizes. The user is required to select
+    * whether the communication buffers should be allocated in global
+    * memory or heap memory, through a parameter. The test requires exactly
+    * two PEs. PE 0 issues shmem putmem_nbi to write data at PE 1 and then calls
+    * shmem quiet. This is repeated for a fixed number of iterations, depending
+    * on the data size. The average latency per iteration is reported.
+    * A few warm-up iterations are run without timing to ignore any start-up
+    * overheads. Both PEs call shmem barrier all after the test for each message size.
+
+osu_oshm_get.c - Latency Test for OpenSHMEM Get Routine
+    * This benchmark is similar to the one above except that PE 0 does a shmem
+    * getmem operation to read data from PE 1 in each iteration. The average
+    * latency per iteration is reported.
+
+osu_oshm_get_nb.c - Latency Test for OpenSHMEM Non-blocking Get Routine
+    * This benchmark is similar to the one above except that PE 0 does a shmem
+    * getmem_nbi operation to read data from PE 1 in each iteration. The average
+    * latency per iteration is reported.
+
+osu_oshm_put_mr.c - Message Rate Test for OpenSHMEM Put Routine
+    * This benchmark measures the aggregate uni-directional operation rate of
+    * OpenSHMEM Put between pairs of PEs, for different data sizes. The user
+    * should select for communication buffers to be in global memory and heap
+    * memory as with the earlier benchmarks. This test requires number of PEs
+    * to be even. The PEs are paired with PE 0 pairing with PE n/2 and so on,
+    * where n is the total number of PEs. The first PE in each pair issues
+    * back-to-back shmem putmem operations to its peer PE. The total time for
+    * the put operations is measured and operation rate per second is reported.
+    * All PEs call shmem barrier all after the test for each message size.
+
+osu_oshm_put_mr_nb.c - Message Rate Test for Non-blocking OpenSHMEM Put Routine
+    * This benchmark measures the aggregate uni-directional operation rate of
+    * OpenSHMEM Non-blocking Put between pairs of PEs, for different data sizes.
+    * The user should select for communication buffers to be in global memory
+    * and heap memory as with the earlier benchmarks. This test requires number
+    * of PEs to be even. The PEs are paired with PE 0 pairing with PE n/2 and so on,
+    * where n is the total number of PEs. The first PE in each pair issues
+    * back-to-back shmem putmem_nbi operations to its peer PE until the window
+    * size. A call to shmem_quite is placed after the window loop to ensure
+    * completion of the issued operations. The total time for the non-blocking
+    * put operations is measured and operation rate per second is reported.
+    * All PEs call shmem barrier all after the test for each message size.
+
+osu_oshm_get_mr_nb.c - Message Rate Test for Non-blocking OpenSHMEM Get Routine
+    * This benchmark measures the aggregate uni-directional operation rate of
+    * OpenSHMEM Non-blocking Get between pairs of PEs, for different data sizes.
+    * The user should select for communication buffers to be in global memory
+    * and heap memory as with the earlier benchmarks. This test requires number
+    * of PEs to be even. The PEs are paired with PE 0 pairing with PE n/2 and so on,
+    * where n is the total number of PEs. The first PE in each pair issues
+    * back-to-back shmem getmem_nbi operations to its peer PE until the window
+    * size. A call to shmem_quite is placed after the window loop to ensure
+    * completion of the issued operations. The total time for the non-blocking
+    * put operations is measured and operation rate per second is reported.
+    * All PEs call shmem barrier all after the test for each message size.
+
+osu_oshm_put_overlap.c - Non-blocking Message Rate Overlap Test
+    * This benchmark measures the aggregate uni-directional operations rate
+    * overlap for OpenSHMEM Put between paris of PEs, for different data sizes.
+    * The user should select for communication buffers to be in global memory
+    * and heap memory as with the earlier benchmarks. This test requires number
+    * of PEs. The benchmarks prints statistics for different phases of
+    * communication, computation and overlap in the end.
+
+osu_oshm_atomics.c - Latency and Operation Rate Test for OpenSHMEM Atomics Routines
+    * This benchmark measures the performance of atomic fetch-and-operate and
+    * atomic operate routines supported in OpenSHMEM for the integer
+    * and long datatypes. The buffers can be selected to be in heap memory or global
+    * memory. The PEs are paired like in the case of Put Operation Rate
+    * benchmark and the first PE in each pair issues back-to-back atomic
+    * operations of a type to its peer PE. The average latency per atomic
+    * operation and the aggregate operation rate are reported.  This is
+    * repeated for each of fadd, finc, add, inc, cswap, swap, set, and fetch
+    * routines.
+
+Collective OpenSHMEM Benchmarks
+-------------------------------
+osu_oshm_collect   - OpenSHMEM Collect Latency Test
+osu_oshm_fcollect  - OpenSHMEM FCollect Latency Test
+osu_oshm_broadcast - OpenSHMEM Broadcast Latency Test
+osu_oshm_reduce    - OpenSHMEM Reduce Latency Test
+osu_oshm_barrier   - OpenSHMEM Barrier Latency Test
+
+Collective Latency Tests
+    * The latest OMB Version includes benchmarks for various OpenSHMEM
+    * collective operations (shmem_collect, shmem_broadcast, shmem_reduce and
+    * shmem_barrier). These benchmarks work in the following manner. Suppose
+    * users run the osu_oshm_broadcast benchmark with N processes, the
+    * benchmark measures the min, max and the average latency of the
+    * shmem_broadcast collective operation across N processes, for various
+    * message lengths, over a large number of iterations. In the default
+    * version, these benchmarks report the average latency for each message
+    * length. Additionally, the benchmarks offer the following options:
+    * "-f" can be used to report additional statistics of the benchmark,
+           such as min and max latencies and the number of iterations.
+    * "-m" option can be used to set the maximum message length to be used in a
+           benchmark. In the default version, the benchmarks report the
+           latencies for up to 1MB message lengths.
+    * "-i" can be used to set the number of iterations to run for each message
+           length.
